@@ -1,5 +1,6 @@
 import { RotateCcw } from 'lucide-react';
 import { Btn, Card, CardTitle, HypoBadge, Page, Pill } from '@/components/bits';
+import { GapList } from '@/components/match-card';
 import { useApp } from '@/lib/store';
 
 export default function Lab() {
@@ -11,7 +12,7 @@ export default function Lab() {
 
   return (
     <Page title={t('labTitle')} lead={t('labLead')}>
-      <div className="flex items-center gap-3 rounded-xl border border-violet/30 bg-violet/5 p-4 text-sm">
+      <div className="flex items-center gap-3 rounded-lg border border-violet/30 bg-violet/5 px-4 py-2.5 text-sm">
         <HypoBadge />
         <p>{t('labBanner')}</p>
       </div>
@@ -23,7 +24,7 @@ export default function Lab() {
               {t('resetSim')}
             </Btn>
           </div>
-          <ul className="grid gap-4">
+          <ul className="grid gap-5">
             {catalog?.skills.map((s) => {
               const real = profile[s.id] ?? 0;
               const val = simulated[s.id] ?? real;
@@ -34,9 +35,10 @@ export default function Lab() {
                     <span className="font-semibold">
                       {skillName(s.id)} {on && <HypoBadge />}
                     </span>
-                    <span className="num">
+                    <span className="num text-right">
                       <span className="text-muted-foreground">{t('baseline')} {Math.round(real)}</span>{' '}
-                      <strong className={on ? 'text-violet' : ''}>{val}</strong>
+                      <span aria-hidden>→</span> <strong className={on ? 'text-violet' : ''}>{t('hypoLevel')} {val}</strong>{' '}
+                      <span className={on ? 'font-bold text-violet' : 'text-muted-foreground'}>(+{Math.round(val - real)})</span>
                     </span>
                   </label>
                   <div className="flex items-center gap-3">
@@ -48,14 +50,14 @@ export default function Lab() {
                       max={100}
                       value={val}
                       onChange={(e) => setSim(s.id, Number(e.target.value))}
-                      className="w-full"
+                      className="h-11 w-full"
                     />
                     <button
                       type="button"
                       data-testid={`button-reset-${s.id}`}
                       disabled={!on}
                       onClick={() => clearSim(s.id)}
-                      className="text-xs font-semibold text-primary disabled:opacity-30"
+                      className="min-h-[44px] shrink-0 px-2 text-xs font-semibold text-primary disabled:opacity-30"
                     >
                       {t('resetSkill')}
                     </button>
@@ -92,6 +94,12 @@ export default function Lab() {
               );
             })}
           </ol>
+          {result?.rankings[0] && (
+            <div className="mt-5">
+              <p className="mb-1.5 text-xs font-bold uppercase tracking-wide text-muted-foreground">{t('remainingGaps')}: {careerName(result.rankings[0].careerId)}</p>
+              <GapList careerId={result.rankings[0].careerId} onlyGaps />
+            </div>
+          )}
         </Card>
       </div>
     </Page>

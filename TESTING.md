@@ -15,7 +15,9 @@ Use the managed API Server and SkillHalfLife workflows to run the application. N
 | --- | --- | --- |
 | Overview | Open Overview | Synthetic Malaysian student, skills, top matches, scenario and learning actions appear. |
 | Navigation | Open each of the eight sections, then browser Back | Correct section is shown; no dead links. |
-| Skill Half-Life | Switch Moderate to Fast AI Disruption; change time horizon | Relevance projections and charts change; assumptions use years. Career fit is not falsely reduced. |
+| Skill Half-Life | Compare solid Moderate and dashed Fast curves; select skills and change horizon | Both scenarios use the same horizon and settings. Table shows both projected values; selecting the global scenario does not remove either comparison curve. Career fit is not falsely reduced. |
+| Comparison independence | Switch global scenario on Half-Life, then visit Radar/Overview | Global scenario persists; comparison evaluations do not overwrite selected-scenario results. |
+| Chart empty/zero horizon | Clear skill selection, then restore a skill and set horizon to 0 | Useful empty message appears when cleared. Both scenario values at year 0 equal initial relevance and render without invalid axes. |
 | Future Skills Radar | Compare current and projected relevance; change horizon/scenario | Visualization uses the model's actual values, not hardcoded graphics. |
 | Career Matches | Inspect all five careers | Fit score, reasons, transferable skills and remaining gaps are visible. Scores are not hiring probabilities. |
 | Reskilling Pathway | Select a career | Ordered objectives, study hours, prerequisites and practical project suggestions appear. Resources remain labelled sample/unverified. |
@@ -53,4 +55,20 @@ Negative years, unknown skill/SDG identifiers, and proficiency/weights outside 0
 - No verified course catalog, earned credentials, user accounts or server-saved profiles.
 - Study hours, exposure, relevance and career/SDG coefficients are illustrative assumptions.
 - SDG points measure preferences, not demonstrated social impact or improved qualifications.
-- Automated browser interaction testing is not included in this first build.
+- Calculation unit tests and browser interaction verification serve different purposes; use the current delivery summary for the checks actually run.
+
+## Dashboard refinement verification
+
+Completed a browser-driven career-planning journey at 1280×900 and 390×844:
+
+- All eight navigation routes and active states; no page-level horizontal overflow.
+- Moderate/Fast Programming relevance: 37.8/15.9 at five years, 15.9/2.8 at ten years, 90/90 at year zero.
+- Independent global scenario, skill selection/clear/show-all, and full radar values.
+- All five career cards and numerical gaps; selected AI Engineer roadmap and prerequisites.
+- All 17 SDG controls; goals 5/10/16 reverse Data/Cloud adjusted ordering without changing fit.
+- Hypothetical learning improves AI alignment and closes gaps; individual and all-skill resets restore baseline.
+- EN/BM and settings persist reload; global reset restores defaults.
+- Keyboard focus visibility; mobile controls exercised with click and keyboard.
+- A deliberately intercepted 503 recovered through automatic query retry.
+
+The nine model unit tests, workspace TypeScript checks and frontend production build passed. Model and API-spec fingerprints were unchanged. Build retains a large-bundle warning. Native touch gestures/physical phones and sustained-failure manual retry were not separately tested; some narrow career-gap headings wrap.

@@ -8,9 +8,9 @@ export default function Careers() {
   return (
     <Page title={t('careersTitle')} lead={t('careersLead')}>
       <Card id="card-formula">
-        <p className="text-sm">{t('matchFormula')}</p>
+        <p className="text-sm leading-relaxed text-muted-foreground">{t('matchFormula')}</p>
       </Card>
-      <div className="grid gap-5 lg:grid-cols-2">
+      <div className="grid gap-6 xl:grid-cols-2">
         {ranked.map((m, i) => (
           <MatchCard key={m.careerId} m={m} rank={i + 1} full />
         ))}

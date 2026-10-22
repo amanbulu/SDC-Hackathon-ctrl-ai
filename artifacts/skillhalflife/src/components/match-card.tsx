@@ -3,11 +3,48 @@ import { ArrowRight } from 'lucide-react';
 import { useApp, type Match } from '@/lib/store';
 import { Bar, Card, Pill } from '@/components/bits';
 
+export function GapList({ careerId, onlyGaps = false, limit }: { careerId: string; onlyGaps?: boolean; limit?: number }) {
+  const { t, result, careerMap, skillName } = useApp();
+  const req = careerMap.get(careerId)?.requirements ?? {};
+  let rows = Object.entries(req).map(([id, need]) => {
+    const have = result?.profileSkills[id] ?? 0;
+    return { id, need, have, gap: Math.max(0, need - have) };
+  });
+  if (onlyGaps) rows = rows.filter((r) => r.gap > 0);
+  rows.sort((a, b) => b.gap - a.gap);
+  if (limit) rows = rows.slice(0, limit);
+  if (rows.length === 0) return <p className="text-sm text-muted-foreground">{t('noGaps')}</p>;
+  return (
+    <table className="w-full text-sm" data-testid={`table-gaps-${careerId}`}>
+      <thead>
+        <tr className="border-b text-left text-xs text-muted-foreground">
+          <th className="py-1.5 font-semibold">{t('skill')}</th>
+          <th className="py-1.5 text-right font-semibold">{t('currentLevel')}</th>
+          <th className="py-1.5 text-right font-semibold">{t('requiredLevel')}</th>
+          <th className="py-1.5 text-right font-semibold">{t('gapLabel')}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {rows.map((r) => (
+          <tr key={r.id} className="border-b last:border-0">
+            <td className="py-1.5 pr-2 font-semibold">{skillName(r.id)}</td>
+            <td className="num py-1.5 text-right">{Math.round(r.have)}</td>
+            <td className="num py-1.5 text-right">{r.need}</td>
+            <td className={`num py-1.5 text-right font-bold ${r.gap > 0 ? 'text-amber' : 'text-primary'}`}>
+              {r.gap > 0 ? `-${Math.round(r.gap)}` : t('meetsReq')}
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  );
+}
+
 export function MatchCard({ m, rank, full = false }: { m: Match; rank: number; full?: boolean }) {
   const { t, lang, careerName, skillName, setCareerId } = useApp();
   const reasons = lang === 'ms' ? m.reasonsMs : m.reasons;
   return (
-    <Card id={`card-match-${m.careerId}`} className="flex flex-col gap-4">
+    <Card id={`card-match-${m.careerId}`} className="flex flex-col gap-5">
       <div className="flex items-start justify-between gap-3">
         <div>
           <p className="num text-xs font-semibold text-muted-foreground">
@@ -22,6 +59,9 @@ export function MatchCard({ m, rank, full = false }: { m: Match; rank: number; f
           <p className="text-xs text-muted-foreground">{t('fit')}</p>
         </div>
       </div>
+      <p className="num rounded-md bg-muted px-2.5 py-1.5 text-xs text-muted-foreground" data-testid={`text-adjusted-${m.careerId}`}>
+        {t('sdgBonus')}: +{m.sdgBonus.toFixed(1)} {t('points')} · {t('adjusted')}: <strong className="text-foreground">{m.adjustedScore.toFixed(1)}</strong>
+      </p>
       <div className="grid gap-2 text-xs">
         {(
           [
@@ -51,7 +91,11 @@ export function MatchCard({ m, rank, full = false }: { m: Match; rank: number; f
               ))}
             </ul>
           </div>
-          <div className="grid gap-3 sm:grid-cols-2">
+          <div>
+            <p className="mb-1.5 text-xs font-bold uppercase tracking-wide text-muted-foreground">{t('skillGapTitle')}</p>
+            <GapList careerId={m.careerId} />
+          </div>
+          <div className="grid gap-4 sm:grid-cols-2">
             <div>
               <p className="mb-1.5 text-xs font-bold uppercase tracking-wide text-muted-foreground">{t('missing')}</p>
               <div className="flex flex-wrap gap-1.5">
@@ -81,7 +125,7 @@ export function MatchCard({ m, rank, full = false }: { m: Match; rank: number; f
         href="/pathway"
         data-testid={`link-pathway-${m.careerId}`}
         onClick={() => setCareerId(m.careerId)}
-        className="mt-auto inline-flex items-center gap-1 text-sm font-semibold text-primary hover:gap-2 transition-all"
+        className="mt-auto inline-flex min-h-[44px] items-center gap-1 text-sm font-semibold text-primary"
       >
         {t('viewPathway')} <ArrowRight className="h-4 w-4" aria-hidden />
       </Link>

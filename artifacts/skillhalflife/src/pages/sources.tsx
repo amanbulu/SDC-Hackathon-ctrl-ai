@@ -11,7 +11,7 @@ export default function Sources() {
     <Page title={t('sourcesTitle')} lead={t('sourcesLead')} needsResult={false}>
       <Card id="card-disclosures">
         <CardTitle>{t('disclosures')}</CardTitle>
-        <ul className="list-disc space-y-1.5 pl-4 text-sm">
+        <ul className="list-disc space-y-2 pl-5 text-sm leading-relaxed">
           {['d1', 'd2', 'd3', 'd4', 'd5'].map((k) => <li key={k}>{t(k)}</li>)}
         </ul>
       </Card>

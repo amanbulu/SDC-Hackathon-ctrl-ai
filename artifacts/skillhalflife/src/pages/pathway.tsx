@@ -35,7 +35,7 @@ export default function Pathway() {
       {steps.length === 0 ? (
         <Card id="card-empty"><p className="text-sm text-muted-foreground">{t('emptyPathway')}</p></Card>
       ) : (
-        <ol className="relative grid gap-4 before:absolute before:bottom-4 before:left-[19px] before:top-4 before:w-0.5 before:bg-border">
+        <ol className="relative grid gap-5 before:absolute before:bottom-4 before:left-[19px] before:top-4 before:w-0.5 before:bg-border">
           {steps.map((id, i) => {
             const s = skillMap.get(id);
             if (!s) return null;
@@ -61,16 +61,26 @@ export default function Pathway() {
                       data-testid={`button-plan-${id}`}
                       aria-pressed={on}
                       onClick={() => toggle(id)}
-                      className={`inline-flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-sm font-semibold transition-all active:scale-95 ${on ? 'border-violet bg-violet/10 text-violet' : 'border-input hover:border-primary'}`}
+                      className={`inline-flex items-center gap-1.5 min-h-[44px] rounded-lg border px-4 py-1.5 text-sm font-semibold ${on ? 'border-violet bg-violet/10 text-violet' : 'border-input hover:border-primary'}`}
                     >
                       {on ? <Check className="h-4 w-4" /> : <Plus className="h-4 w-4" />}
                       {on ? t('unplan') : t('planned')}
                     </button>
                   </div>
-                  <p className="mt-3 text-sm">
-                    <strong>{t('objective')}: </strong>{t('objectiveLead')}{' '}
-                    <span className="num font-semibold">{careerId ? (careerMap.get(careerId)?.requirements[id] ?? 60) : 60}/100</span>.
-                  </p>
+                  {(() => {
+                    const target = careerId ? (careerMap.get(careerId)?.requirements[id] ?? 60) : 60;
+                    return (
+                      <div className="mt-4 rounded-lg bg-muted/60 p-3 text-sm">
+                        <p className="num font-semibold">
+                          {t('currentLevel')} {Math.round(have)} <span aria-hidden>→</span> {t('targetLevel')} {target}
+                          <span className="ml-2 text-amber">
+                            {have >= target ? t('meetsReq') : `${t('gapLabel')} ${Math.round(target - have)}`}
+                          </span>
+                        </p>
+                        <p className="mt-1 text-muted-foreground">{t('objective')}: {t('objectiveLead')} {target}/100.</p>
+                      </div>
+                    );
+                  })()}
                   <dl className="mt-3 grid gap-3 text-sm md:grid-cols-3">
                     <div>
                       <dt className="text-xs font-bold uppercase tracking-wide text-muted-foreground">{t('prereqs')}</dt>

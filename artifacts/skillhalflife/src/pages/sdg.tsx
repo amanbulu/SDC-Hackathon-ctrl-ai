@@ -32,27 +32,19 @@ export default function Sdg() {
   const preset = (fn: (id: number) => number) =>
     setAllWeights(Object.fromEntries(goals.map((g) => [String(g.id), fn(g.id)])));
 
-  return (
-    <Page title={t('sdgTitle')} lead={t('sdgLead')}>
-      <div className="grid gap-5 lg:grid-cols-5">
-        <Card id="card-weights" className="lg:col-span-3">
-          <CardTitle note={<span className="num">{t('sdgFormula')}</span>}>{t('weight')} 0-100</CardTitle>
-          <div className="mb-4 flex flex-wrap gap-2">
-            <Btn testid="button-preset-focus" onClick={() => preset((id) => (FOCUS_GOALS.includes(id) ? 50 : 0))}>{t('presetFocus')}</Btn>
-            <Btn testid="button-preset-zero" onClick={() => preset(() => 0)}>{t('presetZero')}</Btn>
-            <Btn testid="button-preset-even" onClick={() => preset(() => 50)}>{t('presetEven')}</Btn>
-          </div>
-          <ul className="grid gap-x-6 gap-y-3 md:grid-cols-2">
-            {goals.map((g) => {
+  const renderGoals = (list: typeof goals, cls: string) => (
+    <ul className={cls}>
+            {list.map((g) => {
               const w = weights[String(g.id)] ?? 0;
               const focus = FOCUS_GOALS.includes(g.id);
               return (
-                <li key={g.id} data-testid={`row-goal-${g.id}`} className={`rounded-lg p-2.5 ${focus ? 'bg-accent' : ''}`}>
+                <li key={g.id} data-testid={`row-goal-${g.id}`} className={`rounded-lg p-3 ${g.id === 4 ? 'border-2 border-violet/40 bg-accent' : focus ? 'bg-accent/60' : ''}`}>
                   <label htmlFor={`sdg-${g.id}`} className="flex items-start justify-between gap-2 text-sm">
                     <span>
                       <span className="num mr-1.5 font-bold text-violet">{g.id}</span>
                       <span className="font-semibold">{lang === 'ms' ? g.nameMs : g.name}</span>
-                      {focus && <span className="ml-1.5 align-middle"><Pill tone="violet">{t('emphasized')}</Pill></span>}
+                      {g.id === 4 && <span className="ml-1.5 align-middle"><Pill tone="blue">{t('mainGoal')}</Pill></span>}
+                      {focus && g.id !== 4 && <span className="ml-1.5 align-middle"><Pill tone="violet">{t('emphasized')}</Pill></span>}
                     </span>
                     <span className="num font-bold">{w}</span>
                   </label>
@@ -64,13 +56,34 @@ export default function Sdg() {
                     max={100}
                     value={w}
                     onChange={(e) => setWeight(g.id, Number(e.target.value))}
-                    className="mt-1 w-full"
+                    className="mt-1 h-11 w-full"
                   />
                   <p className="text-xs text-muted-foreground">{lang === 'ms' ? g.mechanismMs : g.mechanism}</p>
                 </li>
               );
             })}
-          </ul>
+    </ul>
+  );
+
+  return (
+    <Page title={t('sdgTitle')} lead={t('sdgLead')}>
+      {rows[0] && (
+        <div data-testid="summary-live-ranking" aria-live="polite" className="num rounded-lg border border-primary/20 bg-primary/5 px-4 py-3 text-sm">
+          <span className="font-semibold">{t('liveRanking')}: </span>
+          {rows.map((r) => `${r.adjRank}. ${careerName(r.m.careerId)} (${r.m.adjustedScore.toFixed(1)})`).join('  ·  ')}
+        </div>
+      )}
+      <div className="grid gap-5 lg:grid-cols-5">
+        <Card id="card-weights" className="lg:col-span-3">
+          <CardTitle note={<span className="num">{t('sdgFormula')}</span>}>{t('weight')} 0-100</CardTitle>
+          <div className="mb-4 flex flex-wrap gap-2">
+            <Btn testid="button-preset-focus" onClick={() => preset((id) => (FOCUS_GOALS.includes(id) ? 50 : 0))}>{t('presetFocus')}</Btn>
+            <Btn testid="button-preset-zero" onClick={() => preset(() => 0)}>{t('presetZero')}</Btn>
+            <Btn testid="button-preset-even" onClick={() => preset(() => 50)}>{t('presetEven')}</Btn>
+          </div>
+          {renderGoals(goals.filter((g) => g.id === 4), 'grid gap-3')}
+          <p className="mb-2 mt-5 text-xs font-bold uppercase tracking-wide text-muted-foreground">{t('otherGoals')}</p>
+          {renderGoals(goals.filter((g) => g.id !== 4), 'grid gap-x-6 gap-y-2 md:grid-cols-2')}
         </Card>
 
         <div className="grid content-start gap-5 lg:col-span-2">
@@ -110,7 +123,7 @@ export default function Sdg() {
                 <li key={g.id} className="grid grid-cols-[2rem_1fr_3rem] items-center gap-2 text-xs">
                   <span className="num font-bold text-violet">{g.id}</span>
                   <div className="h-2 overflow-hidden rounded-full bg-muted">
-                    <div className="h-full origin-left rounded-full bg-violet transition-transform duration-500" style={{ transform: `scaleX(${v / maxC})` }} />
+                    <div className="h-full origin-left rounded-full bg-violet " style={{ transform: `scaleX(${v / maxC})` }} />
                   </div>
                   <span className="num text-right">{v.toFixed(1)}</span>
                 </li>

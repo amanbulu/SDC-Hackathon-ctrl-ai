@@ -73,7 +73,7 @@ export function Bar({
       className="h-2 w-full overflow-hidden rounded-full bg-muted"
     >
       <div
-        className={`h-full rounded-full ${bg} transition-transform duration-500 ease-out origin-left`}
+        className={`h-full rounded-full ${bg} origin-left`}
         style={{ transform: `scaleX(${pct / 100})` }}
       />
     </div>
@@ -85,14 +85,13 @@ export function Disclaimer() {
   return (
     <aside
       data-testid="banner-disclaimer"
-      className="flex gap-3 rounded-xl border border-primary/20 bg-primary/5 p-4 text-sm"
+      className="flex gap-2.5 rounded-lg border border-primary/20 bg-primary/5 px-3 py-2.5 text-xs leading-relaxed"
     >
       <Info className="mt-0.5 h-4 w-4 shrink-0 text-primary" aria-hidden />
-      <div>
-        <p className="font-semibold">{t('disclaimerTitle')}</p>
-        <p className="mt-1 text-muted-foreground">{t('disclaimer1')}</p>
-        <p className="text-muted-foreground">{t('disclaimer2')}</p>
-      </div>
+      <p className="text-muted-foreground">
+        <strong className="text-foreground">{t('disclaimerTitle')}: </strong>
+        {t('disclaimer1')} {t('disclaimer2')}
+      </p>
     </aside>
   );
 }
@@ -114,7 +113,7 @@ export function SegButton({
       data-testid={testid}
       aria-pressed={active}
       onClick={onClick}
-      className={`rounded-lg px-3 py-1.5 text-sm font-semibold transition-all active:scale-95 ${
+      className={`min-h-[44px] rounded-lg px-4 py-1.5 text-sm font-semibold ${
         active
           ? 'bg-primary text-primary-foreground shadow-sm'
           : 'bg-muted text-foreground hover:bg-secondary'
@@ -144,7 +143,7 @@ export function Btn({
       data-testid={testid}
       disabled={disabled}
       onClick={onClick}
-      className="inline-flex items-center gap-1.5 rounded-lg border border-input bg-card px-3 py-1.5 text-sm font-semibold transition-all hover:border-primary hover:text-primary active:scale-95 disabled:pointer-events-none disabled:opacity-40"
+      className="inline-flex min-h-[44px] items-center gap-1.5 rounded-lg border border-input bg-card px-4 py-1.5 text-sm font-semibold hover:border-primary hover:text-primary disabled:pointer-events-none disabled:opacity-40"
     >
       {icon}
       {children}
@@ -185,7 +184,7 @@ export function ScenarioControls() {
             step={1}
             value={years}
             onChange={(e) => setYears(Number(e.target.value))}
-            className="w-full"
+            className="h-11 w-full"
           />
           <div className="num flex justify-between text-xs text-muted-foreground">
             <span>0</span>
@@ -261,7 +260,7 @@ export function ErrorBox({ title, onRetry }: { title: string; onRetry: () => voi
             type="button"
             data-testid="button-retry"
             onClick={onRetry}
-            className="mt-3 inline-flex items-center gap-1.5 rounded-lg bg-primary px-3 py-1.5 text-sm font-semibold text-primary-foreground active:scale-95"
+            className="mt-3 inline-flex min-h-[44px] items-center gap-1.5 rounded-lg bg-primary px-4 py-1.5 text-sm font-semibold text-primary-foreground"
           >
             <RefreshCw className="h-4 w-4" aria-hidden />
             {t('retry')}
@@ -319,7 +318,7 @@ export function Page({
     <div className="rise mx-auto flex w-full max-w-6xl flex-col gap-5">
       <header className="flex flex-wrap items-end justify-between gap-3">
         <div className="max-w-2xl">
-          <h1 data-testid="text-page-title" className="text-3xl font-bold leading-tight md:text-4xl">
+          <h1 data-testid="text-page-title" className="text-2xl font-bold leading-tight md:text-3xl">
             {title}
           </h1>
           <p className="mt-2 text-muted-foreground">{lead}</p>

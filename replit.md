@@ -44,6 +44,7 @@ Eight sections cover the profile overview, skill half-life, skills radar, career
 
 - Functional application, not a static mockup; no unnecessary authentication or paid external APIs at this stage.
 - All demonstration data and assumptions must be identified as synthetic/illustrative. No fabricated live statistics, salaries, growth rates, citations or verified course claims.
+- Visual refinements must preserve calculation logic and working features. Avoid unnecessary animation, decorative statistics and overcrowded cards; maintain accessible contrast and mobile usability.
 
 ## Gotchas
 

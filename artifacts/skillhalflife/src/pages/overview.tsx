@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { Link } from 'wouter';
 import { Bar, Card, CardTitle, Page, Pill, ScenarioControls } from '@/components/bits';
-import { MatchCard } from '@/components/match-card';
+import { GapList, MatchCard } from '@/components/match-card';
 import { useApp } from '@/lib/store';
 import { translateFree, translateInterest } from '@/lib/i18n';
 
@@ -75,7 +75,7 @@ export default function Overview() {
 
           <div>
             <h2 className="mb-3 text-xl font-bold">{t('topMatches')}</h2>
-            <div className="grid gap-5 md:grid-cols-3">
+            <div className="grid gap-5 lg:grid-cols-3 md:grid-cols-2">
               {result.rankings.slice(0, 3).map((m, i) => (
                 <MatchCard key={m.careerId} m={m} rank={i + 1} />
               ))}
@@ -92,7 +92,7 @@ export default function Overview() {
                       <span className="font-semibold">{skillName(x.skillId)}</span>
                       <span className="num text-muted-foreground">
                         {x.currentRelevance.toFixed(0)} <span aria-hidden>→</span> {x.futureRelevance.toFixed(0)}
-                        <span className="ml-2 text-amber">{x.delta.toFixed(1)}</span>
+                        <span className="ml-2 text-amber">{x.delta < 0 ? t('trendDown') : t('trendFlat')} {Math.abs(x.delta).toFixed(1)}</span>
                       </span>
                     </div>
                     <div className="relative">
@@ -110,14 +110,7 @@ export default function Overview() {
             <div className="grid gap-5">
               <Card id="card-gaps">
                 <CardTitle note={top ? careerName(top.careerId) : undefined}>{t('gaps')}</CardTitle>
-                <div className="flex flex-wrap gap-1.5">
-                  {top && top.missingSkills.length === 0 && <p className="text-sm text-muted-foreground">{t('noGaps')}</p>}
-                  {top?.missingSkills.map((s) => (
-                    <Pill key={s} tone="amber">
-                      {skillName(s)}
-                    </Pill>
-                  ))}
-                </div>
+                {top && <GapList careerId={top.careerId} onlyGaps limit={5} />}
               </Card>
               <Card id="card-actions">
                 <CardTitle note={t('actionsNote')}>{t('actions')}</CardTitle>

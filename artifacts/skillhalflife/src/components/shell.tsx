@@ -40,7 +40,7 @@ export function Shell({ children }: { children: ReactNode }) {
           data-testid={`button-lang-${l}`}
           aria-pressed={lang === l}
           onClick={() => setLang(l)}
-          className={`rounded-md px-3 py-1 text-xs font-bold uppercase transition-all ${
+          className={`min-h-[44px] min-w-[44px] rounded-md px-3 py-1 text-xs font-bold uppercase ${
             lang === l ? 'bg-sidebar-primary text-white' : 'text-sidebar-foreground hover:text-white'
           }`}
         >
@@ -58,7 +58,7 @@ export function Shell({ children }: { children: ReactNode }) {
         resetAll();
         toast({ title: t('resetDone') });
       }}
-      className="flex items-center gap-2 rounded-lg px-3 py-2 text-xs font-semibold text-sidebar-foreground/80 transition-colors hover:bg-sidebar-accent hover:text-white"
+      className="flex min-h-[44px] items-center gap-2 rounded-lg px-3 py-2 text-xs font-semibold text-sidebar-foreground/80 transition-colors hover:bg-sidebar-accent hover:text-white"
     >
       <RotateCcw className="h-3.5 w-3.5" aria-hidden />
       {t('resetAll')}
@@ -73,7 +73,7 @@ export function Shell({ children }: { children: ReactNode }) {
       >
         {t('skipContent')}
       </a>
-      <aside className="hidden w-64 shrink-0 flex-col bg-sidebar p-4 text-sidebar-foreground md:sticky md:top-0 md:flex md:h-[100dvh]">
+      <aside className="hidden w-56 shrink-0 flex-col bg-sidebar p-4 text-sidebar-foreground md:sticky md:top-0 md:flex md:h-[100dvh]">
         <div className="px-2 pb-6 pt-2">
           <div className="flex items-center gap-2.5">
             <svg width="30" height="30" viewBox="0 0 32 32" aria-hidden>
@@ -93,7 +93,7 @@ export function Shell({ children }: { children: ReactNode }) {
               href={href}
               data-testid={`link-nav-${key}`}
               aria-current={active(href) ? 'page' : undefined}
-              className={`flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-semibold transition-all ${
+              className={`flex min-h-[44px] items-center gap-3 rounded-lg px-3 py-2 text-sm font-semibold ${
                 active(href)
                   ? 'bg-sidebar-accent text-white shadow-[inset_3px_0_0_hsl(var(--sidebar-primary))]'
                   : 'text-sidebar-foreground/80 hover:bg-sidebar-accent/60 hover:text-white'
@@ -126,7 +126,7 @@ export function Shell({ children }: { children: ReactNode }) {
                   resetAll();
                   toast({ title: t('resetDone') });
                 }}
-                className="rounded-lg p-2 text-sidebar-foreground hover:bg-sidebar-accent"
+                className="flex min-h-[44px] min-w-[44px] items-center justify-center rounded-lg p-2 text-sidebar-foreground hover:bg-sidebar-accent"
               >
                 <RotateCcw className="h-4 w-4" />
               </button>
@@ -138,7 +138,8 @@ export function Shell({ children }: { children: ReactNode }) {
                 key={href}
                 href={href}
                 data-testid={`link-mnav-${key}`}
-                className={`flex shrink-0 items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-semibold ${
+                aria-current={active(href) ? 'page' : undefined}
+                className={`flex min-h-[44px] shrink-0 items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-semibold ${
                   active(href) ? 'bg-primary text-primary-foreground' : 'text-foreground hover:bg-muted'
                 }`}
               >

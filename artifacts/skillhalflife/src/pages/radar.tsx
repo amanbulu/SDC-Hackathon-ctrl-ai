@@ -18,7 +18,8 @@ export default function RadarPage() {
     () =>
       (result?.projections ?? []).map((p) => ({
         id: p.skillId,
-        name: skillName(p.skillId),
+        name: skillName(p.skillId).length > 14 ? skillName(p.skillId).slice(0, 13) + '…' : skillName(p.skillId),
+        full: skillName(p.skillId),
         present: p.currentRelevance,
         future: p.futureRelevance,
       })),
@@ -31,11 +32,11 @@ export default function RadarPage() {
       <div className="grid gap-5 lg:grid-cols-5">
         <Card id="card-radar" className="lg:col-span-3">
           <CardTitle note={`${t(scenario)} / ${years} ${t('yearsUnit')}`}>{t('relevanceIdx')}</CardTitle>
-          <div className="h-[420px]" role="img" aria-label={t('radarTitle')}>
+          <div className="h-[340px] md:h-[420px]" role="img" aria-label={t('radarTitle')}>
             <ResponsiveContainer>
-              <RadarChart data={rows} outerRadius="70%">
+              <RadarChart data={rows} outerRadius="62%">
                 <PolarGrid stroke="hsl(222 30% 85%)" />
-                <PolarAngleAxis dataKey="name" tick={{ fontSize: 11, fill: '#1c2447' }} />
+                <PolarAngleAxis dataKey="name" tick={{ fontSize: 10, fill: '#1c2447' }} />
                 <PolarRadiusAxis domain={[0, 100]} tick={{ fontSize: 10 }} angle={90} />
                 <Radar name={t('present')} dataKey="present" stroke="#7c4dcc" fill="#7c4dcc" fillOpacity={0.2} strokeWidth={2} />
                 <Radar name={`${t('future')} (${years} ${t('yearsUnit')})`} dataKey="future" stroke="#2a4fc8" fill="#2a4fc8" fillOpacity={0.3} strokeWidth={2} />
@@ -59,10 +60,10 @@ export default function RadarPage() {
             <tbody>
               {rows.map((r) => (
                 <tr key={r.id} className="border-b last:border-0" data-testid={`row-radar-${r.id}`}>
-                  <td className="py-1.5 font-semibold">{r.name}</td>
+                  <td className="py-1.5 font-semibold">{r.full}</td>
                   <td className="num text-right">{r.present.toFixed(1)}</td>
                   <td className="num text-right">{r.future.toFixed(1)}</td>
-                  <td className="num text-right text-muted-foreground">{(r.future - r.present).toFixed(1)}</td>
+                  <td className="num text-right text-muted-foreground">{r.future - r.present < -0.05 ? `${t('trendDown')} ${Math.abs(r.future - r.present).toFixed(1)}` : t('trendFlat')}</td>
                 </tr>
               ))}
             </tbody>

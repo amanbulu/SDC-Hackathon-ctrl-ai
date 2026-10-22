@@ -1,0 +1,99 @@
+import { RotateCcw } from 'lucide-react';
+import { Btn, Card, CardTitle, HypoBadge, Page, Pill } from '@/components/bits';
+import { useApp } from '@/lib/store';
+
+export default function Lab() {
+  const { t, catalog, result, base, simulated, setSim, clearSim, skillName, careerName } = useApp();
+  const profile = catalog?.profile.skills ?? {};
+  const simCount = Object.keys(simulated).length;
+  const ref = base ?? result;
+  const baseRank = new Map((ref?.rankings ?? []).map((m, i) => [m.careerId, { i, s: m.adjustedScore }]));
+
+  return (
+    <Page title={t('labTitle')} lead={t('labLead')}>
+      <div className="flex items-center gap-3 rounded-xl border border-violet/30 bg-violet/5 p-4 text-sm">
+        <HypoBadge />
+        <p>{t('labBanner')}</p>
+      </div>
+      <div className="grid gap-5 lg:grid-cols-5">
+        <Card id="card-sim" className="lg:col-span-3">
+          <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
+            <CardTitle>{t('simulated')}</CardTitle>
+            <Btn testid="button-reset-sim" disabled={simCount === 0} onClick={() => clearSim()} icon={<RotateCcw className="h-4 w-4" />}>
+              {t('resetSim')}
+            </Btn>
+          </div>
+          <ul className="grid gap-4">
+            {catalog?.skills.map((s) => {
+              const real = profile[s.id] ?? 0;
+              const val = simulated[s.id] ?? real;
+              const on = s.id in simulated;
+              return (
+                <li key={s.id} data-testid={`row-sim-${s.id}`}>
+                  <label htmlFor={`sim-${s.id}`} className="flex items-center justify-between gap-2 text-sm">
+                    <span className="font-semibold">
+                      {skillName(s.id)} {on && <HypoBadge />}
+                    </span>
+                    <span className="num">
+                      <span className="text-muted-foreground">{t('baseline')} {Math.round(real)}</span>{' '}
+                      <strong className={on ? 'text-violet' : ''}>{val}</strong>
+                    </span>
+                  </label>
+                  <div className="flex items-center gap-3">
+                    <input
+                      id={`sim-${s.id}`}
+                      data-testid={`input-sim-${s.id}`}
+                      type="range"
+                      min={real}
+                      max={100}
+                      value={val}
+                      onChange={(e) => setSim(s.id, Number(e.target.value))}
+                      className="w-full"
+                    />
+                    <button
+                      type="button"
+                      data-testid={`button-reset-${s.id}`}
+                      disabled={!on}
+                      onClick={() => clearSim(s.id)}
+                      className="text-xs font-semibold text-primary disabled:opacity-30"
+                    >
+                      {t('resetSkill')}
+                    </button>
+                  </div>
+                </li>
+              );
+            })}
+          </ul>
+        </Card>
+        <Card id="card-sim-result" className="content-start lg:col-span-2">
+          <CardTitle note={t('vsBaseline')}>{t('adjusted')}</CardTitle>
+          {simCount === 0 && <p className="mb-3 text-sm text-muted-foreground">{t('noSim')}</p>}
+          <ol className="grid gap-2">
+            {result?.rankings.map((m, i) => {
+              const b = baseRank.get(m.careerId);
+              const ds = b ? m.adjustedScore - b.s : 0;
+              const dr = b ? b.i - i : 0;
+              return (
+                <li key={m.careerId} data-testid={`row-simrank-${m.careerId}`} className="rounded-lg bg-muted/60 p-3 text-sm">
+                  <div className="flex justify-between gap-2">
+                    <span className="font-bold"><span className="num mr-2 text-primary">{i + 1}</span>{careerName(m.careerId)}</span>
+                    <span className="num font-bold">{m.adjustedScore.toFixed(1)}</span>
+                  </div>
+                  {simCount > 0 && (
+                    <div className="mt-1 flex gap-1.5">
+                      <Pill tone={ds > 0 ? 'blue' : 'muted'}>{ds >= 0 ? '+' : ''}{ds.toFixed(1)} {t('points')}</Pill>
+                      {dr !== 0 && <Pill tone="violet">{dr > 0 ? '+' : ''}{dr} {t('rank')}</Pill>}
+                    </div>
+                  )}
+                  <p className="mt-2 text-xs text-muted-foreground">
+                    {t('missing')}: {m.missingSkills.length ? m.missingSkills.map(skillName).join(', ') : t('none')}
+                  </p>
+                </li>
+              );
+            })}
+          </ol>
+        </Card>
+      </div>
+    </Page>
+  );
+}

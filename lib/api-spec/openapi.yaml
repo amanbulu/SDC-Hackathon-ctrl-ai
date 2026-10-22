@@ -11,6 +11,34 @@ tags:
   - name: health
     description: Health operations
 paths:
+  /skillhalflife/catalog:
+    get:
+      operationId: getSkillCatalog
+      responses:
+        "200":
+          description: Synthetic profile and illustrative model catalog
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ModelCatalog"
+  /skillhalflife/evaluate:
+    post:
+      operationId: evaluateProfile
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/EvaluationInput"
+      responses:
+        "200":
+          description: Deterministic career rankings and skill projections
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EvaluationResult"
+        "400":
+          description: Invalid model inputs
   /healthz:
     get:
       operationId: healthCheck
@@ -26,6 +54,141 @@ paths:
                 $ref: "#/components/schemas/HealthStatus"
 components:
   schemas:
+    ModelCatalog:
+      type: object
+      required: [profile, skills, careers, goals, observations]
+      properties:
+        profile:
+          $ref: "#/components/schemas/StudentProfile"
+        skills:
+          type: array
+          items: { $ref: "#/components/schemas/SkillDefinition" }
+        careers:
+          type: array
+          items: { $ref: "#/components/schemas/CareerDefinition" }
+        goals:
+          type: array
+          items: { $ref: "#/components/schemas/GoalDefinition" }
+        observations:
+          type: array
+          items: { $ref: "#/components/schemas/MarketObservation" }
+    StudentProfile:
+      type: object
+      required: [name, location, education, experience, interests, skills]
+      properties:
+        name: { type: string }
+        location: { type: string }
+        education: { type: string }
+        experience: { type: string }
+        interests: { type: array, items: { type: string } }
+        skills: { type: object, additionalProperties: { type: number } }
+    SkillDefinition:
+      type: object
+      required: [id, name, nameMs, initialRelevance, moderateHalfLife, fastHalfLife, taskExposure, hours, prerequisites, project, projectMs]
+      properties:
+        id: { type: string }
+        name: { type: string }
+        nameMs: { type: string }
+        initialRelevance: { type: number }
+        moderateHalfLife: { type: number }
+        fastHalfLife: { type: number }
+        taskExposure: { type: number }
+        hours: { type: number }
+        prerequisites: { type: array, items: { type: string } }
+        project: { type: string }
+        projectMs: { type: string }
+    CareerDefinition:
+      type: object
+      required: [id, name, nameMs, interests, educationAlignment, requirements, sdgContributions]
+      properties:
+        id: { type: string }
+        name: { type: string }
+        nameMs: { type: string }
+        interests: { type: array, items: { type: string } }
+        educationAlignment: { type: number }
+        requirements: { type: object, additionalProperties: { type: number } }
+        sdgContributions: { type: object, additionalProperties: { type: number } }
+    GoalDefinition:
+      type: object
+      required: [id, name, nameMs, mechanism, mechanismMs]
+      properties:
+        id: { type: integer }
+        name: { type: string }
+        nameMs: { type: string }
+        mechanism: { type: string }
+        mechanismMs: { type: string }
+    MarketObservation:
+      type: object
+      required: [skillId, sourceUrl, observationDate, retrievalDate, metricDefinition, value, synthetic]
+      properties:
+        skillId: { type: string }
+        sourceUrl: { type: [string, "null"] }
+        observationDate: { type: [string, "null"] }
+        retrievalDate: { type: [string, "null"] }
+        metricDefinition: { type: string }
+        value: { type: number }
+        synthetic: { type: boolean }
+    EvaluationInput:
+      type: object
+      required: [scenario, years, simulatedSkills, sdgWeights]
+      properties:
+        scenario: { type: string, enum: [moderate, fast] }
+        years: { type: number, minimum: 0, maximum: 20 }
+        simulatedSkills:
+          type: object
+          additionalProperties: { type: number, minimum: 0, maximum: 100 }
+        sdgWeights:
+          type: object
+          additionalProperties: { type: number, minimum: 0, maximum: 100 }
+    EvaluationResult:
+      type: object
+      required: [rankings, projections, profileSkills, averageRelevance, roadmap]
+      properties:
+        rankings:
+          type: array
+          items: { $ref: "#/components/schemas/CareerMatch" }
+        projections:
+          type: array
+          items: { $ref: "#/components/schemas/SkillProjection" }
+        profileSkills: { type: object, additionalProperties: { type: number } }
+        averageRelevance: { type: number }
+        roadmap:
+          type: object
+          additionalProperties:
+            type: array
+            items: { type: string }
+    CareerMatch:
+      type: object
+      required: [careerId, fitScore, adjustedScore, sdgBonus, skillAlignment, interestAlignment, educationAlignment, missingSkills, transferableSkills, reasons, reasonsMs]
+      properties:
+        careerId: { type: string }
+        fitScore: { type: number }
+        adjustedScore: { type: number }
+        sdgBonus: { type: number }
+        skillAlignment: { type: number }
+        interestAlignment: { type: number }
+        educationAlignment: { type: number }
+        missingSkills: { type: array, items: { type: string } }
+        transferableSkills: { type: array, items: { type: string } }
+        reasons: { type: array, items: { type: string } }
+        reasonsMs: { type: array, items: { type: string } }
+    SkillProjection:
+      type: object
+      required: [skillId, halfLife, currentRelevance, futureRelevance, points]
+      properties:
+        skillId: { type: string }
+        halfLife: { type: number }
+        currentRelevance: { type: number }
+        futureRelevance: { type: number }
+        points:
+          type: array
+          items: { $ref: "#/components/schemas/RelevancePoint" }
+    RelevancePoint:
+      type: object
+      required: [year, relevance]
+      properties:
+        year: { type: number }
+        relevance: { type: number }
     HealthStatus:
       type: object
       properties:

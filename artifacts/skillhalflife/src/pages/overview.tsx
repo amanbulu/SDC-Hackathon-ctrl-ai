@@ -3,11 +3,17 @@ import { Link } from 'wouter';
 import { Bar, Card, CardTitle, Page, Pill, ScenarioControls } from '@/components/bits';
 import { GapList, MatchCard } from '@/components/match-card';
 import { useApp } from '@/lib/store';
+import { useCv } from '@/lib/cv-context';
+import { useActiveProfile } from '@/components/cv-profile';
+import { cs } from '@/lib/cv-strings';
 import { translateFree, translateInterest } from '@/lib/i18n';
 
 export default function Overview() {
   const { t, lang, catalog, result, skillName, skillMap, years, scenario, careerName } = useApp();
-  const p = catalog?.profile;
+  const p = useActiveProfile();
+  const cv = useCv();
+  const cvc = cv.confirmed;
+  const secs = cvc ? (['education', 'experience', 'projects', 'certifications', 'achievements'] as const) : [];
 
   const trends = useMemo(() => {
     if (!result) return [];
@@ -27,10 +33,21 @@ export default function Overview() {
         <>
           <div className="grid gap-5 lg:grid-cols-5">
             <Card id="card-profile" className="lg:col-span-2">
-              <CardTitle note={<Pill tone="muted">{t('synthetic')}</Pill>}>{t('profile')}</CardTitle>
+              <CardTitle note={<Pill tone="muted">{cvc ? cs(lang, 'cvProfile') : t('synthetic')}</Pill>}>{cvc ? cs(lang, 'cvProfile') : t('profile')}</CardTitle>
               <p className="text-2xl font-bold" data-testid="text-student-name" style={{ fontFamily: 'var(--app-font-display)' }}>
-                {p.name}
+                {cvc ? cvc.displayName || cs(lang, 'cvProfile') : p.name}
               </p>
+              {cvc ? (
+                <div className="mt-3 space-y-2 text-sm" data-testid="text-cv-own-sections">
+                  <p className="text-xs text-muted-foreground">{cs(lang, 'cvOwn')}</p>
+                  {secs.map((k) => (
+                    <div key={k}>
+                      <p className="font-semibold">{cs(lang, k)}</p>
+                      <p className="line-clamp-3 whitespace-pre-line text-muted-foreground">{cvc.sections[k] || cs(lang, 'noneEntered')}</p>
+                    </div>
+                  ))}
+                </div>
+              ) : (
               <dl className="mt-3 grid grid-cols-[auto_1fr] gap-x-4 gap-y-1.5 text-sm">
                 <dt className="text-muted-foreground">{t('location')}</dt>
                 <dd>{p.location}</dd>
@@ -39,6 +56,7 @@ export default function Overview() {
                 <dt className="text-muted-foreground">{t('experience')}</dt>
                 <dd>{translateFree(lang, p.experience)}</dd>
               </dl>
+              )}
               <p className="mb-1.5 mt-4 text-xs font-bold uppercase tracking-wide text-muted-foreground">{t('interests')}</p>
               <div className="flex flex-wrap gap-1.5">
                 {p.interests.map((i) => (
@@ -47,6 +65,9 @@ export default function Overview() {
                   </Pill>
                 ))}
               </div>
+              <Link href="/my-cv" data-testid="link-overview-my-cv" className="mt-3 inline-flex min-h-[44px] items-center text-sm font-semibold text-primary">
+                {t('nav.my-cv')}
+              </Link>
               <div className="mt-5 rounded-lg bg-muted p-3">
                 <p className="text-xs text-muted-foreground">{t('avgRelevance')}</p>
                 <p className="num text-3xl font-bold text-primary" data-testid="text-avg-relevance">

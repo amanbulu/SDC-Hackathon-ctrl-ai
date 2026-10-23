@@ -10,6 +10,7 @@ const D: Record<string, [string, string]> = {
   'nav.pathway': ['Reskilling Pathway', 'Laluan Kemahiran Semula'],
   'nav.sdg': ['SDG Steering', 'Hala Tuju SDG'],
   'nav.lab': ['Career Resilience Lab', 'Makmal Daya Tahan Kerjaya'],
+  'nav.my-cv': ['My CV', 'CV Saya'],
   'nav.sources': ['Data Sources', 'Sumber Data'],
   language: ['Language', 'Bahasa'],
   resetAll: ['Reset all settings', 'Set semula semua tetapan'],

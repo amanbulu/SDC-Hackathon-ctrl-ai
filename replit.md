@@ -1,12 +1,13 @@
 # SkillHalfLife
 
-Illustrative career intelligence and reskilling simulations for a synthetic Malaysian software engineering student, built for the Aiversecity Future-Ready Workforce Challenge.
+Career intelligence and reskilling simulations for Malaysian students, with a clearly labelled synthetic demo and an optional reviewed CV profile, built for the Aiversecity Future-Ready Workforce Challenge.
 
 ## Run & Operate
 
-- `pnpm --filter @workspace/api-server run dev` — run the API server (port 5000)
+- `pnpm --filter @workspace/api-server run dev` — run the API server (managed workflow supplies port 8080)
 - `pnpm --filter @workspace/skillhalflife run dev` — frontend (use its managed workflow to supply port/base path)
 - `pnpm --filter @workspace/skill-model test` — calculation unit tests using Node's test runner
+- `pnpm --filter @workspace/api-server test` — CV validation, genuine PDF/DOCX parsing and rule-based extraction tests
 - `pnpm run typecheck` — full typecheck across all packages
 - `pnpm run build` — typecheck + build all packages
 - `pnpm --filter @workspace/api-spec run codegen` — regenerate API hooks and Zod schemas from the OpenAPI spec
@@ -38,7 +39,7 @@ Illustrative career intelligence and reskilling simulations for a synthetic Mala
 
 ## Product
 
-Eight sections cover the profile overview, skill half-life, skills radar, career matches, reskilling pathway, SDG steering, hypothetical learning, and data provenance. English and Bahasa Malaysia are supported.
+Nine sections cover the profile overview, skill half-life, skills radar, career matches, reskilling pathway, SDG steering, hypothetical learning, My CV, and data provenance. English and Bahasa Malaysia are supported.
 
 ## User preferences
 
@@ -51,6 +52,19 @@ Eight sections cover the profile overview, skill half-life, skills radar, career
 - Use years consistently for half-life and elapsed time; validate finite numeric inputs.
 - Unverified learning resources are sample suggestions, not verified courses.
 - No server-side persistence or verified learning achievements in this version.
+
+## CV privacy and matching rules
+
+- PDF/DOCX only, maximum 5 MiB; bytes stay in server memory, never written to disk or logged. Do not add real CVs or personal data to Git.
+- Local parsing only (`pdf-parse`, `mammoth`); no external AI or remote document processing. Do not change this without explicit configuration and disclosure.
+- Extracted text and reviewed information use tab-scoped `sessionStorage`, not persistent local storage. Remove CV and Reset all erase that state. Browser session restore can retain tabs; the UI explains shared-device precautions.
+- Keyword recognition provides uncertain evidence, not measured competence. All CV proficiency levels start at zero until the user supplies them; unknown is not proof of inability.
+- Real CV profiles must never inherit synthetic skills, interests, education, name, location or experience. Demo personal results are hidden while the first CV awaits confirmation.
+- Replacing a file creates a fresh review draft; the previous confirmed profile remains active until the new draft is explicitly applied.
+- Preserve the 70/20/10 formula. CV qualification inputs are explicitly confirmed: unconfirmed/secondary/diploma/bachelor/postgraduate map to illustrative 0/25/50/75/85 alignment, plus 15 for relevant experience, capped at 100. These are model assumptions, not verified credentials or hiring probabilities.
+- Processing is isolated in bounded workers (40 pages, 100k text characters, 15 seconds). Archive metadata limits reject oversized DOCX contents. Peer-level rate limiting is deliberately conservative and does not trust forwarded IP headers.
+
+See `CV_WORKFLOW.md` for testing steps and current limitations.
 
 ## Pointers
 

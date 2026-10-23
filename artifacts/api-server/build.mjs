@@ -15,7 +15,10 @@ async function buildAll() {
   await rm(distDir, { recursive: true, force: true });
 
   await esbuild({
-    entryPoints: [path.resolve(artifactDir, "src/index.ts")],
+    entryPoints: {
+      index: path.resolve(artifactDir, "src/index.ts"),
+      "cv-worker": path.resolve(artifactDir, "src/lib/cv-worker.ts"),
+    },
     platform: "node",
     bundle: true,
     format: "esm",
@@ -28,6 +31,9 @@ async function buildAll() {
     // - uses native modules and loads them dynamically (e.g. sharp)
     // - use path traversal to read files (e.g. @google-cloud/secret-manager loads sibling .proto files)
     external: [
+      "pdf-parse",
+      "mammoth",
+      "yauzl",
       "*.node",
       "sharp",
       "better-sqlite3",

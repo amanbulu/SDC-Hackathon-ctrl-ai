@@ -1,11 +1,15 @@
+import { useCv } from '@/lib/cv-context';
+import { useActiveProfile } from '@/components/cv-profile';
+import { cs } from '@/lib/cv-strings';
 import { RotateCcw } from 'lucide-react';
 import { Btn, Card, CardTitle, HypoBadge, Page, Pill } from '@/components/bits';
 import { GapList } from '@/components/match-card';
 import { useApp } from '@/lib/store';
 
 export default function Lab() {
-  const { t, catalog, result, base, simulated, setSim, clearSim, skillName, careerName } = useApp();
-  const profile = catalog?.profile.skills ?? {};
+  const { t, lang, catalog, result, base, simulated, setSim, clearSim, skillName, careerName } = useApp();
+  const profile = useActiveProfile()?.skills ?? {};
+  const isCv = !!useCv().confirmed;
   const simCount = Object.keys(simulated).length;
   const ref = base ?? result;
   const baseRank = new Map((ref?.rankings ?? []).map((m, i) => [m.careerId, { i, s: m.adjustedScore }]));
@@ -36,7 +40,7 @@ export default function Lab() {
                       {skillName(s.id)} {on && <HypoBadge />}
                     </span>
                     <span className="num text-right">
-                      <span className="text-muted-foreground">{t('baseline')} {Math.round(real)}</span>{' '}
+                      <span className="text-muted-foreground">{isCv ? cs(lang, 'labCv') : cs(lang, 'labSyn')} {Math.round(real)}</span>{' '}
                       <span aria-hidden>→</span> <strong className={on ? 'text-violet' : ''}>{t('hypoLevel')} {val}</strong>{' '}
                       <span className={on ? 'font-bold text-violet' : 'text-muted-foreground'}>(+{Math.round(val - real)})</span>
                     </span>

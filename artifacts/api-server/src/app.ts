@@ -3,6 +3,7 @@ import cors from "cors";
 import pinoHttp from "pino-http";
 import router from "./routes";
 import { logger } from "./lib/logger";
+import cvRouter from "./routes/cv";
 
 const app: Express = express();
 
@@ -26,6 +27,8 @@ app.use(
   }),
 );
 app.use(cors());
+// Multipart CV processing has its own strict size and concurrency limits.
+app.use("/api", cvRouter);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 

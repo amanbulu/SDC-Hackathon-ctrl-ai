@@ -2,6 +2,43 @@ import { Link } from 'wouter';
 import { ArrowRight } from 'lucide-react';
 import { useApp, type Match } from '@/lib/store';
 import { Bar, Card, Pill } from '@/components/bits';
+import { useCv } from '@/lib/cv-context';
+import { cs } from '@/lib/cv-strings';
+
+function Contrib({ careerId }: { careerId: string }) {
+  const { lang, careerMap, skillName, simulated } = useApp();
+  const { confirmed } = useCv();
+  if (!confirmed) return null;
+  const req = Object.keys(careerMap.get(careerId)?.requirements ?? {});
+  const cvRows = req.filter((id) => (confirmed.levels[id] ?? 0) > 0);
+  const added = Object.entries(simulated).filter(([id, v]) => v > (confirmed.levels[id] ?? 0) && req.includes(id));
+  return (
+    <div data-testid={`cv-contrib-${careerId}`}>
+      <p className="mb-1.5 text-xs font-bold uppercase tracking-wide text-muted-foreground">{cs(lang, 'cvSkillsH')}</p>
+      <p className="mb-1.5 text-xs text-muted-foreground">{cs(lang, 'cvSkillsNote')}</p>
+      {cvRows.length === 0 ? <p className="text-sm text-muted-foreground">{cs(lang, 'noContrib')}</p> : (
+        <ul className="space-y-1.5 text-sm">
+          {cvRows.map((id) => {
+            const ev = confirmed.analysis.candidates.filter((x) => x.skillId === id);
+            return (
+              <li key={id}><span className="font-semibold">{skillName(id)}</span> <span className="num">{confirmed.levels[id]}</span>
+                {ev.map((x, i) => <span key={i} className="block break-words text-xs text-muted-foreground">{x.name}: {x.evidence}</span>)}
+                {ev.length === 0 && <span className="block text-xs text-muted-foreground">{cs(lang, 'manualSkill')}</span>}
+              </li>
+            );
+          })}
+        </ul>
+      )}
+      {added.length > 0 && (
+        <div className="mt-3">
+          <p className="mb-1.5 text-xs font-bold uppercase tracking-wide text-muted-foreground">{cs(lang, 'addedSkillsH')}</p>
+          <ul className="space-y-1 text-sm">{added.map(([id, v]) => <li key={id}>{skillName(id)} <span className="num">{v}</span></li>)}</ul>
+        </div>
+      )}
+      <p className="mt-2 text-xs text-muted-foreground">{cs(lang, 'fitNote')}</p>
+    </div>
+  );
+}
 
 export function GapList({ careerId, onlyGaps = false, limit }: { careerId: string; onlyGaps?: boolean; limit?: number }) {
   const { t, result, careerMap, skillName } = useApp();
@@ -91,6 +128,7 @@ export function MatchCard({ m, rank, full = false }: { m: Match; rank: number; f
               ))}
             </ul>
           </div>
+          <Contrib careerId={m.careerId} />
           <div>
             <p className="mb-1.5 text-xs font-bold uppercase tracking-wide text-muted-foreground">{t('skillGapTitle')}</p>
             <GapList careerId={m.careerId} />

@@ -1,6 +1,8 @@
 import { useEffect, type ReactNode } from 'react';
 import { AlertTriangle, Info, Loader2, RefreshCw, CheckCircle2, FlaskConical } from 'lucide-react';
 import { useApp } from '@/lib/store';
+import { useCv } from '@/lib/cv-context';
+import { Link, useLocation } from 'wouter';
 
 export function Card({
   children,
@@ -284,7 +286,10 @@ export function Page({
   needsResult?: boolean;
   showDisclaimer?: boolean;
 }) {
-  const { t, catalog, catalogError, refetchCatalog, result, status, retry } = useApp();
+  const { t, lang, catalog, catalogError, refetchCatalog, result, status, retry } = useApp();
+  const { draft, confirmed } = useCv();
+  const [location] = useLocation();
+  const awaitingCv = !!draft && !confirmed && ['/', '/careers', '/pathway', '/sdg', '/lab'].includes(location);
   useEffect(() => {
     document.title = `${title} | SkillHalfLife`;
     for (const selector of ['meta[name="description"]', 'meta[property="og:description"]', 'meta[name="twitter:description"]']) {
@@ -295,7 +300,15 @@ export function Page({
     }
   }, [title, lead]);
   let body: ReactNode;
-  if (!catalog) {
+  if (awaitingCv) {
+    body = <Card id="card-cv-awaiting-confirmation">
+      <CardTitle>{lang === 'ms' ? 'CV anda sedia untuk semakan' : 'Your CV is ready for review'}</CardTitle>
+      <p className="mb-4 text-sm text-muted-foreground">{lang === 'ms'
+        ? 'Sahkan profil CV untuk melihat padanan peribadi. Data demo disembunyikan supaya tidak bercampur dengan maklumat anda. Anda masih boleh menggunakan carta senario dan sumber.'
+        : 'Confirm your CV profile to see personal matches. Demo results are hidden so they cannot be confused with your information. Scenario charts and sources remain available.'}</p>
+      <Link href="/my-cv" className="inline-flex min-h-11 items-center rounded-lg bg-primary px-4 text-sm font-semibold text-primary-foreground">{lang === 'ms' ? 'Semak CV saya' : 'Review My CV'}</Link>
+    </Card>;
+  } else if (!catalog) {
     body = catalogError ? (
       <ErrorBox title={t('errorCatalog')} onRetry={refetchCatalog} />
     ) : (

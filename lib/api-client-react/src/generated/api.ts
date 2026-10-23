@@ -25,6 +25,8 @@ import type {
 } from '@tanstack/react-query';
 
 import type {
+  CvAnalysis,
+  CvUploadInput,
   EvaluationInput,
   EvaluationResult,
   HealthStatus,
@@ -57,6 +59,76 @@ const withQueryKey = <T extends object, K>(query: T, queryKey: K): T & { queryKe
   }
   return result;
 };
+
+export const getAnalyzeCvUrl = () => {
+
+
+
+
+  return `/api/skillhalflife/cv/analyze`
+}
+
+export const analyzeCv = async (cvUploadInput: CvUploadInput, options?: Parameters<typeof customFetch>[1]): Promise<CvAnalysis> => {
+    const formData = new FormData();
+formData.append(`file`, cvUploadInput.file);
+
+  return customFetch<CvAnalysis>(getAnalyzeCvUrl(),
+  {
+    ...options,
+    method: 'POST'
+    ,
+    body: formData
+  }
+);}
+
+
+
+
+
+export const getAnalyzeCvMutationKey = () => ['analyzeCv'] as const;
+
+export const getAnalyzeCvMutationOptions = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof analyzeCv>>, TError,AnalyzeCvMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof analyzeCv>>, TError,AnalyzeCvMutationVariables, TContext> => {
+
+const mutationKey = getAnalyzeCvMutationKey();
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof analyzeCv>>, AnalyzeCvMutationVariables> = (props) => {
+          const {data} = props ?? {};
+
+          return  analyzeCv(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type AnalyzeCvMutationResult = NonNullable<Awaited<ReturnType<typeof analyzeCv>>>
+    export type AnalyzeCvMutationBody = BodyType<CvUploadInput>
+    export type AnalyzeCvMutationError = ErrorType<void>
+    export type AnalyzeCvMutationVariables = {data: BodyType<CvUploadInput>}
+
+    export const useAnalyzeCv = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof analyzeCv>>, TError,AnalyzeCvMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof analyzeCv>>,
+        TError,
+        AnalyzeCvMutationVariables,
+        TContext
+      > => {
+      return useMutation(getAnalyzeCvMutationOptions(options), queryClient);
+    }
 
 export const getGetSkillCatalogUrl = () => {
 

@@ -3,7 +3,16 @@ export type EvaluationInput = {
   years: number;
   simulatedSkills: Record<string, number>;
   sdgWeights: Record<string, number>;
+  profile?: MatchingProfile;
 };
+export type MatchingProfile = {
+  skills: Record<string, number>;
+  interests: string[];
+  educationLevel: "unconfirmed" | "secondary" | "diploma" | "bachelor" | "postgraduate";
+  relevantExperience: boolean;
+};
+export const interestIds = ["software", "cloud", "social-impact", "infrastructure", "security", "data", "ai"];
+const qualificationPoints = { unconfirmed: 0, secondary: 25, diploma: 50, bachelor: 75, postgraduate: 85 };
 export type SkillDefinition = {
   id: string; name: string; nameMs: string; initialRelevance: number;
   moderateHalfLife: number; fastHalfLife: number; taskExposure: number;
@@ -110,7 +119,22 @@ export function evaluate(input:EvaluationInput) {
     if (!goals.some(g=>String(g.id)===id)) throw new Error(`Unknown SDG ${id}`);
     bounded(value,0,100,"weight");
   }
-  const profileSkills={...profile.skills};
+  const confirmed = input.profile;
+  if (confirmed) {
+    if (!confirmed.skills || !Array.isArray(confirmed.interests) ||
+        confirmed.interests.some(id => !interestIds.includes(id)) ||
+        !Object.hasOwn(qualificationPoints, confirmed.educationLevel) ||
+        typeof confirmed.relevantExperience !== "boolean") throw new Error("Invalid confirmed profile");
+    for (const [id, value] of Object.entries(confirmed.skills)) {
+      if (!skills.some(s => s.id === id)) throw new Error("Unknown confirmed skill");
+      bounded(value, 0, 100, "confirmed proficiency");
+    }
+  }
+  // A real CV starts from zero confirmed evidence, never from the demo profile.
+  const profileSkills = confirmed
+    ? Object.fromEntries(skills.map(s => [s.id, confirmed.skills[s.id] ?? 0]))
+    : {...profile.skills};
+  const activeInterests = confirmed?.interests ?? profile.interests;
   // Learning cannot erase a pre-existing skill.
   for (const [id,value] of Object.entries(input.simulatedSkills)) profileSkills[id]=Math.max(profileSkills[id]??0,value);
   const projections=skills.map(s=>{
@@ -123,8 +147,10 @@ export function evaluate(input:EvaluationInput) {
   const rankings=careers.map(c=>{
     const entries=Object.entries(c.requirements);
     const skillAlignment=100*entries.reduce((sum,[id,required])=>sum+Math.min(1,(profileSkills[id]??0)/required),0)/entries.length;
-    const interestAlignment=100*c.interests.filter(id=>profile.interests.includes(id)).length/c.interests.length;
-    const educationAlignment=c.educationAlignment;
+    const interestAlignment=100*c.interests.filter(id=>activeInterests.includes(id)).length/c.interests.length;
+    const educationAlignment = confirmed
+      ? Math.min(100, qualificationPoints[confirmed.educationLevel] + (confirmed.relevantExperience ? 15 : 0))
+      : c.educationAlignment;
     const fitScore=.7*skillAlignment+.2*interestAlignment+.1*educationAlignment;
     const sdgBonus=goals.reduce((sum,g)=>sum+(input.sdgWeights[String(g.id)]??0)/100*(c.sdgContributions[String(g.id)]??0),0);
     return {careerId:c.id,fitScore,adjustedScore:fitScore+sdgBonus,sdgBonus,skillAlignment,interestAlignment,educationAlignment,

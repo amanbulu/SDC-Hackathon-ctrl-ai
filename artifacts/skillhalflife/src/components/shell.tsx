@@ -10,6 +10,7 @@ import {
   FlaskConical,
   BookMarked,
   RotateCcw,
+  FileUser,
 } from 'lucide-react';
 import { useApp } from '@/lib/store';
 import { useToast } from '@/hooks/use-toast';
@@ -22,6 +23,7 @@ const NAV = [
   { href: '/pathway', key: 'pathway', icon: RouteIcon },
   { href: '/sdg', key: 'sdg', icon: Globe2 },
   { href: '/lab', key: 'lab', icon: FlaskConical },
+  { href: '/my-cv', key: 'my-cv', icon: FileUser },
   { href: '/sources', key: 'sources', icon: BookMarked },
 ];
 

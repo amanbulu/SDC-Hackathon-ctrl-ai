@@ -11,6 +11,29 @@ tags:
   - name: health
     description: Health operations
 paths:
+  /skillhalflife/cv/analyze:
+    post:
+      operationId: analyzeCv
+      tags: [skillhalflife]
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: "#/components/schemas/CvUploadInput"
+      responses:
+        "200":
+          description: Locally extracted CV text and review candidates. Nothing is stored on the server.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CvAnalysis"
+        "400":
+          description: Unsupported, empty, corrupt, encrypted or unreadable document
+        "413":
+          description: File or document complexity exceeds processing limits
+        "429":
+          description: Too many upload requests; retry later
   /skillhalflife/catalog:
     get:
       operationId: getSkillCatalog
@@ -54,6 +77,60 @@ paths:
                 $ref: "#/components/schemas/HealthStatus"
 components:
   schemas:
+    CvUploadInput:
+      type: object
+      required: [file]
+      properties:
+        file:
+          type: string
+          format: binary
+    CvSkillCandidate:
+      type: object
+      required: [name, category, skillId, evidence, uncertain]
+      properties:
+        name: { type: string }
+        category: { type: string }
+        skillId: { type: [string, "null"] }
+        evidence: { type: string }
+        uncertain: { type: boolean }
+    CvSections:
+      type: object
+      required: [education, experience, projects, certifications, achievements]
+      properties:
+        education: { type: string, maxLength: 10000 }
+        experience: { type: string, maxLength: 10000 }
+        projects: { type: string, maxLength: 10000 }
+        certifications: { type: string, maxLength: 10000 }
+        achievements: { type: string, maxLength: 10000 }
+    CvAnalysis:
+      type: object
+      required: [text, candidates, sections, warnings]
+      properties:
+        text: { type: string }
+        candidates:
+          type: array
+          items: { $ref: "#/components/schemas/CvSkillCandidate" }
+        sections: { $ref: "#/components/schemas/CvSections" }
+        warnings:
+          type: array
+          items: { type: string }
+    MatchingProfile:
+      type: object
+      required: [skills, interests, educationLevel, relevantExperience]
+      properties:
+        skills:
+          type: object
+          additionalProperties: { type: number, minimum: 0, maximum: 100 }
+        interests:
+          type: array
+          maxItems: 7
+          items:
+            type: string
+            enum: [software, cloud, social-impact, infrastructure, security, data, ai]
+        educationLevel:
+          type: string
+          enum: [unconfirmed, secondary, diploma, bachelor, postgraduate]
+        relevantExperience: { type: boolean }
     ModelCatalog:
       type: object
       required: [profile, skills, careers, goals, observations]
@@ -132,6 +209,8 @@ components:
       type: object
       required: [scenario, years, simulatedSkills, sdgWeights]
       properties:
+        profile:
+          $ref: "#/components/schemas/MatchingProfile"
         scenario: { type: string, enum: [moderate, fast] }
         years: { type: number, minimum: 0, maximum: 20 }
         simulatedSkills:

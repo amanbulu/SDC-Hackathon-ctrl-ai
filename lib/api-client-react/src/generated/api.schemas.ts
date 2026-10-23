@@ -5,6 +5,73 @@
  * API specification
  * OpenAPI spec version: 0.1.0
  */
+export interface CvUploadInput {
+  file: Blob | File;
+}
+
+export interface CvSkillCandidate {
+  name: string;
+  category: string;
+  /** @nullable */
+  skillId: string | null;
+  evidence: string;
+  uncertain: boolean;
+}
+
+export interface CvSections {
+  /** @maxLength 10000 */
+  education: string;
+  /** @maxLength 10000 */
+  experience: string;
+  /** @maxLength 10000 */
+  projects: string;
+  /** @maxLength 10000 */
+  certifications: string;
+  /** @maxLength 10000 */
+  achievements: string;
+}
+
+export interface CvAnalysis {
+  text: string;
+  candidates: CvSkillCandidate[];
+  sections: CvSections;
+  warnings: string[];
+}
+
+export type MatchingProfileSkills = {[key: string]: number};
+
+export type MatchingProfileInterestsItem = typeof MatchingProfileInterestsItem[keyof typeof MatchingProfileInterestsItem];
+
+
+export const MatchingProfileInterestsItem = {
+  software: 'software',
+  cloud: 'cloud',
+  'social-impact': 'social-impact',
+  infrastructure: 'infrastructure',
+  security: 'security',
+  data: 'data',
+  ai: 'ai',
+} as const;
+
+export type MatchingProfileEducationLevel = typeof MatchingProfileEducationLevel[keyof typeof MatchingProfileEducationLevel];
+
+
+export const MatchingProfileEducationLevel = {
+  unconfirmed: 'unconfirmed',
+  secondary: 'secondary',
+  diploma: 'diploma',
+  bachelor: 'bachelor',
+  postgraduate: 'postgraduate',
+} as const;
+
+export interface MatchingProfile {
+  skills: MatchingProfileSkills;
+  /** @maxItems 7 */
+  interests: MatchingProfileInterestsItem[];
+  educationLevel: MatchingProfileEducationLevel;
+  relevantExperience: boolean;
+}
+
 export type StudentProfileSkills = {[key: string]: number};
 
 export interface StudentProfile {
@@ -86,6 +153,7 @@ export type EvaluationInputSimulatedSkills = {[key: string]: number};
 export type EvaluationInputSdgWeights = {[key: string]: number};
 
 export interface EvaluationInput {
+  profile?: MatchingProfile;
   scenario: EvaluationInputScenario;
   /**
      * @minimum 0

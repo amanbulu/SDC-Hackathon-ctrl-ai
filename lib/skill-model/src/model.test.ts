@@ -3,6 +3,33 @@ import assert from "node:assert/strict";
 import { relevance, evaluate, catalog, learningRoadmap } from "./index.ts";
 
 const defaults={scenario:"moderate" as const,years:5,simulatedSkills:{},sdgWeights:{}};
+test("confirmed CV uses no synthetic skills, interests or education and keeps the 70/20/10 formula", () => {
+  const profile = { skills: { programming: 80 }, interests: ["software"], educationLevel: "bachelor" as const, relevantExperience: true };
+  const result = evaluate({ ...defaults, profile });
+  assert.equal(result.profileSkills.programming, 80);
+  assert.equal(result.profileSkills.communication, 0);
+  assert.equal(result.profileSkills.databases, 0);
+  for (const m of result.rankings) {
+    assert.equal(m.fitScore, .7*m.skillAlignment + .2*m.interestAlignment + .1*m.educationAlignment);
+    assert.equal(m.educationAlignment, 90);
+  }
+  assert.equal(result.rankings.find(m => m.careerId === "software")!.interestAlignment, 50);
+  assert.equal(result.rankings.find(m => m.careerId === "cybersecurity")!.interestAlignment, 0);
+  const unknown = evaluate({ ...defaults, profile: { skills: {}, interests: [], educationLevel: "unconfirmed", relevantExperience: false } });
+  assert.ok(unknown.rankings.every(m => m.fitScore === 0));
+  const learned = evaluate({ ...defaults, profile, simulatedSkills: { databases: 80, "system-design": 70, communication: 80, "ai-literacy": 60 } });
+  const before = result.rankings.find(m => m.careerId === "software")!;
+  const after = learned.rankings.find(m => m.careerId === "software")!;
+  assert.ok(after.fitScore > before.fitScore);
+  assert.ok(after.missingSkills.length < before.missingSkills.length);
+  assert.deepEqual(learned.roadmap.software, []);
+});
+test("confirmed CV rejects unknown skills, out-of-range proficiency and invalid interest/qualification values", () => {
+  const profile = { skills: {}, interests: [], educationLevel: "unconfirmed" as const, relevantExperience: false };
+  assert.throws(() => evaluate({ ...defaults, profile: { ...profile, skills: { invented: 80 } } }));
+  assert.throws(() => evaluate({ ...defaults, profile: { ...profile, skills: { programming: 101 } } }));
+  assert.throws(() => evaluate({ ...defaults, profile: { ...profile, interests: ["fiction"] } }));
+});
 test("relevance is unchanged initially, halves after one half-life, quarters after two",()=>{
   assert.equal(relevance(80,0,4),80);
   assert.equal(relevance(80,4,4),40);

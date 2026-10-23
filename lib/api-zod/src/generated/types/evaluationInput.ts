@@ -8,8 +8,10 @@
 import type { EvaluationInputScenario } from './evaluationInputScenario';
 import type { EvaluationInputSdgWeights } from './evaluationInputSdgWeights';
 import type { EvaluationInputSimulatedSkills } from './evaluationInputSimulatedSkills';
+import type { MatchingProfile } from './matchingProfile';
 
 export interface EvaluationInput {
+  profile?: MatchingProfile;
   scenario: EvaluationInputScenario;
   /**
      * @minimum 0

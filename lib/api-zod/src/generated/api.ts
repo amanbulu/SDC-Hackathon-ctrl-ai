@@ -8,6 +8,42 @@
 import * as zod from 'zod';
 
 
+export const AnalyzeCvBody = zod.object({
+  "file": zod.instanceof(Blob)
+})
+
+export const analyzeCvResponseSectionsEducationMax = 10000;
+
+export const analyzeCvResponseSectionsExperienceMax = 10000;
+
+export const analyzeCvResponseSectionsProjectsMax = 10000;
+
+export const analyzeCvResponseSectionsCertificationsMax = 10000;
+
+export const analyzeCvResponseSectionsAchievementsMax = 10000;
+
+
+
+export const AnalyzeCvResponse = zod.object({
+  "text": zod.string(),
+  "candidates": zod.array(zod.object({
+  "name": zod.string(),
+  "category": zod.string(),
+  "skillId": zod.string().nullable(),
+  "evidence": zod.string(),
+  "uncertain": zod.boolean()
+})),
+  "sections": zod.object({
+  "education": zod.string().max(analyzeCvResponseSectionsEducationMax),
+  "experience": zod.string().max(analyzeCvResponseSectionsExperienceMax),
+  "projects": zod.string().max(analyzeCvResponseSectionsProjectsMax),
+  "certifications": zod.string().max(analyzeCvResponseSectionsCertificationsMax),
+  "achievements": zod.string().max(analyzeCvResponseSectionsAchievementsMax)
+}),
+  "warnings": zod.array(zod.string())
+})
+
+
 export const GetSkillCatalogResponse = zod.object({
   "profile": zod.object({
   "name": zod.string(),
@@ -58,6 +94,11 @@ export const GetSkillCatalogResponse = zod.object({
 })
 
 
+export const evaluateProfileBodyProfileSkillsMinOne = 0;
+export const evaluateProfileBodyProfileSkillsMaxOne = 100;
+
+export const evaluateProfileBodyProfileInterestsMax = 7;
+
 export const evaluateProfileBodyYearsMin = 0;
 export const evaluateProfileBodyYearsMax = 20;
 
@@ -70,6 +111,12 @@ export const evaluateProfileBodySdgWeightsMaxOne = 100;
 
 
 export const EvaluateProfileBody = zod.object({
+  "profile": zod.object({
+  "skills": zod.record(zod.string(), zod.number().min(evaluateProfileBodyProfileSkillsMinOne).max(evaluateProfileBodyProfileSkillsMaxOne)),
+  "interests": zod.array(zod.enum(['software', 'cloud', 'social-impact', 'infrastructure', 'security', 'data', 'ai'])).max(evaluateProfileBodyProfileInterestsMax),
+  "educationLevel": zod.enum(['unconfirmed', 'secondary', 'diploma', 'bachelor', 'postgraduate']),
+  "relevantExperience": zod.boolean()
+}).optional(),
   "scenario": zod.enum(['moderate', 'fast']),
   "years": zod.number().min(evaluateProfileBodyYearsMin).max(evaluateProfileBodyYearsMax),
   "simulatedSkills": zod.record(zod.string(), zod.number().min(evaluateProfileBodySimulatedSkillsMinOne).max(evaluateProfileBodySimulatedSkillsMaxOne)),

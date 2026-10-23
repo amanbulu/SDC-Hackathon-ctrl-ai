@@ -6,6 +6,8 @@ import { TooltipProvider } from '@/components/ui/tooltip';
 import NotFound from '@/pages/not-found';
 import { Shell } from '@/components/shell';
 import { AppProvider } from '@/lib/store';
+import { CvProvider } from '@/lib/cv-context';
+import MyCv from '@/pages/my-cv';
 import Overview from '@/pages/overview';
 import HalfLife from '@/pages/half-life';
 import RadarPage from '@/pages/radar';
@@ -37,6 +39,7 @@ function Router() {
           <Route path="/pathway" component={Pathway} />
           <Route path="/sdg" component={Sdg} />
           <Route path="/lab" component={Lab} />
+          <Route path="/my-cv" component={MyCv} />
           <Route path="/sources" component={Sources} />
           <Route component={NotFound} />
         </Switch>
@@ -54,11 +57,13 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
+        <CvProvider>
         <AppProvider>
           <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, '')}>
             <Router />
           </WouterRouter>
         </AppProvider>
+        </CvProvider>
         <Toaster />
       </TooltipProvider>
     </QueryClientProvider>

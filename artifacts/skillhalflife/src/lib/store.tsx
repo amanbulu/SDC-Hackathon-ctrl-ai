@@ -10,6 +10,8 @@ import {
 } from 'react';
 import { useGetSkillCatalog, useEvaluateProfile, type ModelCatalog, type EvaluationResult } from '@workspace/api-client-react';
 import { tr, type Lang } from '@/lib/i18n';
+import { useCv } from '@/lib/cv-context';
+import { useQueryClient } from '@tanstack/react-query';
 
 type Catalog = ModelCatalog;
 export type EvalResult = EvaluationResult;
@@ -71,6 +73,7 @@ interface Ctx {
   setLang: (l: Lang) => void;
   t: (k: string) => string;
   catalog: Catalog | undefined;
+  activeProfile: Catalog['profile'] | undefined;
   catalogLoading: boolean;
   catalogError: boolean;
   refetchCatalog: () => void;
@@ -106,12 +109,17 @@ export function useApp(): Ctx {
 }
 
 export function AppProvider({ children }: { children: ReactNode }) {
+  const { draft, confirmed, matchingProfile, version: cvVersion, removeCv } = useCv();
+  const queryClient = useQueryClient();
+  const previousCvVersion = useRef(cvVersion);
   const [settings, setSettings] = useState<Settings>(load);
   const [careerSel, setCareerSel] = useState<string | null>(null);
   const [result, setResult] = useState<EvalResult | null>(null);
   const [base, setBase] = useState<EvalResult | null>(null);
   const [status, setStatus] = useState<Status>('idle');
   const [tick, setTick] = useState(0);
+  const [resultProfileKey, setResultProfileKey] = useState('');
+  const profileKey = JSON.stringify([matchingProfile ?? null, cvVersion]);
 
   const q = useGetSkillCatalog();
   const catalog = q.data;
@@ -124,12 +132,22 @@ export function AppProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     try {
-      localStorage.setItem(KEY, JSON.stringify(settings));
+      // Real-CV simulations are tab-scoped, never copied into persistent settings.
+      localStorage.setItem(KEY, JSON.stringify(confirmed ? { ...settings, simulated: {} } : settings));
     } catch {
       /* storage unavailable */
     }
     document.documentElement.lang = settings.lang === 'ms' ? 'ms' : 'en';
-  }, [settings]);
+  }, [settings, confirmed]);
+
+  useEffect(() => {
+    if (previousCvVersion.current === cvVersion) return;
+    previousCvVersion.current = cvVersion;
+    setSettings(s => ({ ...s, simulated: {} }));
+    setCareerSel(null);
+    queryClient.getMutationCache().clear();
+    queryClient.removeQueries({ queryKey: ['skillhalflife-scenario-comparison'] });
+  }, [cvVersion, queryClient]);
 
   const weights = useMemo(() => {
     const w: Record<string, number> = {};
@@ -152,13 +170,14 @@ export function AppProvider({ children }: { children: ReactNode }) {
     const sim = JSON.parse(sKey) as Record<string, number>;
     const timer = setTimeout(() => {
       const call = (simulatedSkills: Record<string, number>) =>
-        mutateRef.current({ data: { scenario, years, simulatedSkills, sdgWeights: w } });
+        mutateRef.current({ data: { scenario, years, simulatedSkills, sdgWeights: w, profile: matchingProfile } });
       const hasSim = Object.keys(sim).length > 0;
       Promise.all([call(sim), hasSim ? call({}) : Promise.resolve(null)])
         .then(([r, b]) => {
           if (gen !== genRef.current) return;
           setResult(r);
           setBase(b);
+          setResultProfileKey(profileKey);
           setStatus('ready');
         })
         .catch(() => {
@@ -166,19 +185,29 @@ export function AppProvider({ children }: { children: ReactNode }) {
           setStatus('error');
         });
     }, 180);
-    return () => clearTimeout(timer);
-  }, [catalog, scenario, years, wKey, sKey, tick]);
+    return () => { clearTimeout(timer); genRef.current++; };
+  }, [catalog, scenario, years, wKey, sKey, tick, profileKey]);
 
   const lang = settings.lang;
   const t = useCallback((k: string) => tr(lang, k), [lang]);
   const skillMap = useMemo(() => new Map((catalog?.skills ?? []).map((s) => [s.id, s])), [catalog]);
   const careerMap = useMemo(() => new Map((catalog?.careers ?? []).map((c) => [c.id, c])), [catalog]);
+  const activeProfile: Catalog['profile'] | undefined = confirmed && catalog ? {
+    name: confirmed.displayName || (lang === 'ms' ? 'Profil CV saya' : 'My CV profile'),
+    location: '',
+    education: confirmed.sections.education || (lang === 'ms' ? 'Belum disahkan' : 'Not confirmed'),
+    experience: confirmed.sections.experience || (lang === 'ms' ? 'Belum disahkan' : 'Not confirmed'),
+    interests: confirmed.interests,
+    skills: Object.fromEntries(catalog.skills.map(s => [s.id, confirmed.levels[s.id] ?? 0])),
+  } : draft ? undefined : catalog?.profile;
+  const currentResult = resultProfileKey === profileKey ? result : null;
 
   const value: Ctx = {
     lang,
     setLang: (l) => setSettings((s) => ({ ...s, lang: l })),
     t,
     catalog,
+    activeProfile,
     catalogLoading: q.isLoading,
     catalogError: q.isError,
     refetchCatalog: () => void refetchRef.current(),
@@ -200,16 +229,17 @@ export function AppProvider({ children }: { children: ReactNode }) {
         delete n[id];
         return { ...p, simulated: n };
       }),
-    result,
-    base,
-    status,
+    result: currentResult,
+    base: resultProfileKey === profileKey ? base : null,
+    status: !currentResult && status === 'ready' ? 'loading' : status,
     retry: () => setTick((x) => x + 1),
     resetAll: () => {
       setSettings({ ...DEFAULTS });
       setCareerSel(null);
+      removeCv();
     },
     careerId:
-      careerSel && careerMap.has(careerSel) ? careerSel : (result?.rankings[0]?.careerId ?? null),
+      careerSel && careerMap.has(careerSel) ? careerSel : (currentResult?.rankings[0]?.careerId ?? null),
     setCareerId: setCareerSel,
     skillName: (id) => {
       const s = skillMap.get(id);

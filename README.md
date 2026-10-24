@@ -1,6 +1,6 @@
 # SkillHalfLife — SDC Hackathon Submission
 
-An interactive career-intelligence and reskilling dashboard for Malaysian students. Demonstration data and model assumptions are synthetic/illustrative, not verified forecasts.
+An interactive career-intelligence and reskilling dashboard for Malaysian students. Demonstration data and model assumptions are illustrative, not verified forecasts.
 
 ## Team Information
 

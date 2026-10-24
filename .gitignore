@@ -55,3 +55,9 @@ Thumbs.db
 .local/
 /generated-artifacts/
 /private-uploads/
+
+# Local secrets / real CVs
+.env
+.env.*
+!.env.example
+/private-uploads/

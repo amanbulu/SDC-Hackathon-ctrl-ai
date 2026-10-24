@@ -8,7 +8,7 @@ An interactive career-intelligence and reskilling dashboard for Malaysian studen
 
 | Field | Details |
 | --- | --- |
-| Team Name | To be completed by the team |
+| Team Name | ctrl + ai |
 | Team Domain (Domain 1 / Domain 2) | To be confirmed |
 | SDG Track (1–17) | To be confirmed; the app lets users explore SDG preferences |
 | Team Leader | To be completed by the team |

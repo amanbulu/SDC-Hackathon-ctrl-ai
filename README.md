@@ -81,11 +81,16 @@ No RunPod credentials are required for the current application. Never commit a r
 
 ## RunPod (Not applicable to this team)
 
-The team says RunPod is not required for its submission. This application does not use RunPod. The original organiser template includes a RunPod section, example handler and proof form; they are kept only as unfilled reference materials, not as evidence of integration.
+The team did not use RunPod for this program.
 
 ## Challenges & Learnings
 
-To be completed by the team with its actual experience.
+What challenges did you face, and how did you overcome them?
+One challenge was making complex ideas—such as skill half-life, career matching, and reskilling—easy for students to understand. We addressed this by organising the dashboard into focused sections and providing English and Bahasa Malaysia support. Handling CV information also required care. We implemented PDF/DOCX validation and a review step so users can check extracted information before applying it to their profile. We also kept CV processing within the application server rather than sending documents to an external AI service.
+
+What did your team learn?
+We learned that building a useful application involves more than generating code. Although Replit AI helped us develop the website, we still needed to understand the application’s behaviour, review its limitations, and ensure that its explanations matched what the system actually does. We also learned the importance of responsible data handling, clear communication, and transparent assumptions. For a career-planning tool, helping users understand the limits of a result is just as important as displaying the result itself.
+
 
 ## Future Improvements
 
@@ -100,7 +105,7 @@ To be completed by the team with its actual experience.
 | Adib Ashman | Backend / AI Engineer | [@amanbulu](https://github.com/amanbulu) |
 | Muhammad Firdaus | Content / SDG Specialist | [@muhammadfirdaus10](https://github.com/muhammadfirdaus10) |
 | Adam Iqbal Khan | Technical Writer / Pitcher | [@adamkhaniqbal](https://github.com/adamkhaniqbal) |
-| Adib Ashman | Backend / Data | [@naimnk174-star](https://github.com/naimnk174-star) |
+| Naim Norman Khairi | Backend / Data | [@naimnk174-star](https://github.com/naimnk174-star) |
 
 ---
 
@@ -110,17 +115,13 @@ To be completed by the team with its actual experience.
 - [/] Slide deck link added
 - [/] Demo video link added
 - [/] Replit used, with proof of use in `submission/`
-- [ ] RunPod used, with proof of use in `submission/`
-- [/] Preliminary submission completed (`SDC2026_TeamName_Preliminary.pdf`)
-- [/] Technology declaration completed (`SDC2026_TeamName_TechDeclaration.pdf`)
-- [/] Submission files renamed with your team name (replace `TeamName`)
+- [  ] RunPod used, with proof of use in `submission/`
+- [/] Preliminary submission completed
+- [/] Technology declaration completed
+- [/] Submission files renamed with your team name
 - [/] "How to Run" steps verified
 - [/] No API keys or secrets committed to the repository
 
 ## License
 
 This repository contains the Apache License 2.0 file carried over from the GitHub repository initialization; confirm that this license is appropriate for every contribution before final submission.
-
-## Import history
-
-The original Replit commits were imported into a new GitHub branch with their commit hashes and timestamps intact. They were not necessarily pushed to GitHub on their original commit dates.

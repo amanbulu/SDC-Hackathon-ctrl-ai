@@ -63,6 +63,8 @@ export default defineConfig({
   build: {
     outDir: path.resolve(import.meta.dirname, 'dist/public'),
     emptyOutDir: true,
+    // Used to verify that Overview's static imports exclude chart-only code.
+    manifest: true,
   },
   server: {
     port,

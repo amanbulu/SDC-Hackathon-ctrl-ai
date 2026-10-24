@@ -71,4 +71,51 @@ Completed a browser-driven career-planning journey at 1280×900 and 390×844:
 - Keyboard focus visibility; mobile controls exercised with click and keyboard.
 - A deliberately intercepted 503 recovered through automatic query retry.
 
-The nine model unit tests, workspace TypeScript checks and frontend production build passed. Model and API-spec fingerprints were unchanged. Build retains a large-bundle warning. Native touch gestures/physical phones and sustained-failure manual retry were not separately tested; some narrow career-gap headings wrap.
+The nine model unit tests, workspace TypeScript checks and frontend production build passed. Model and API-spec fingerprints were unchanged. At that time the build retained a large-bundle warning (addressed by route splitting below). Native touch gestures/physical phones and sustained-failure manual retry were not separately tested; some narrow career-gap headings wrap.
+
+## Lazy route loading
+
+Build the frontend with its managed environment, or run:
+
+```sh
+PORT=5174 BASE_PATH=/ NODE_ENV=production pnpm --filter @workspace/skillhalflife run build
+```
+
+The production manifest at `artifacts/skillhalflife/dist/public/.vite/manifest.json`
+should list eight dynamic page entries, including My CV. `index.html` must not statically import
+either chart page or their shared chart chunk. Overview stays eager; the other
+sections load only when visited. With the shared CV integration, the measured entry is about 401 KB (130 KB gzip),
+and the shared chart chunk is about 360 KB (101 KB gzip), with no >500 KB warning.
+These are build sizes, not measured mobile load times.
+
+Verify with production files and a fresh browser context (development Vite
+requests are not representative of bundled downloads):
+
+- Record Overview's JavaScript requests: no other page or chart chunk should download.
+- Delay the first Half-Life or Radar chunk request. The navigation stays usable
+  and the live loading status switches between English and Bahasa Malaysia.
+- Load all eight sections, follow browser Back, and reload `/radar` directly.
+  Shared scenario, horizon, career selection, SDG weights and simulated skills
+  survive client-side navigation. Language changes must not reset chart selections.
+- Confirm both Half-Life curves, selection/clear/show-all, horizon zero, radar
+  values and chart tooltips still work after loading.
+- In a fresh context, abort a chart/page chunk request. The localized error
+  appears inside the shell; navigating to Overview or another unaffected section
+  recovers without resetting shared state.
+- Restore the network and use **Reload page / Muat semula halaman** on the failed
+  route. It should render with saved settings intact. There must be no automatic
+  reload loop while offline. Reload is intentional: browsers and React can cache
+  rejected module imports, so simply resetting an error boundary is insufficient.
+- Reload preserves the settings already stored by the app, not transient page
+  selections or the in-memory career selection; client-side navigation preserves
+  the shared career selection.
+
+Production browser verification passed at 390×844 with the real API:
+Overview requested only the entry JavaScript; all seven dynamic sections loaded;
+EN/BM delayed-loading states, Half-Life selection/clear/show-all and zero/10-year
+values worked; scenario, horizon, career, SDG and simulated-skill state survived
+client-side navigation. Direct Radar reload, browser Back and the unknown-route
+fallback worked. Aborting Radar's first chunk showed both localized error states
+and working Overview navigation; restoring the network and explicitly reloading
+rendered Radar with BM/Fast/10 retained, without an automatic reload loop.
+Workspace type checks and production manifest assertions also passed.

@@ -1,0 +1,1 @@
+- [Lazy route recovery](lazy-route-recovery.md) — failed module downloads use deliberate reload recovery; keep the shell and shared state outside route boundaries.

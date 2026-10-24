@@ -21,7 +21,7 @@ An interactive career-intelligence and reskilling dashboard for Malaysian studen
 | --- | --- |
 | GitHub Repository | https://github.com/amanbulu/SDC-Hackathon-ctrl-ai- |
 | Live Demo / Replit project | To be added after team verifies the URL |
-| RunPod Endpoint | Not available; integration not implemented |
+| RunPod Endpoint | Not applicable to this team’s submission |
 | Slide Deck | To be added |
 | Demo Video | To be added |
 
@@ -58,7 +58,7 @@ SkillHalfLife explores hypothetical skill-relevance decay, career matching and r
 - artifacts/api-server — API and CV parsing
 - lib/skill-model — deterministic catalog, evaluations and unit tests
 - lib/api-spec and generated clients — API contract
-- submission/ — four blank organiser PDF templates (complete and rename before submission)
+- submission/ — four unfilled organiser PDF templates; complete and rename only those applicable to the team’s submission. The RunPod proof form is included solely as an unfilled copy of the template.
 - docs/organiser-template/ — original Python/RunPod example and template README for reference only; not this app runtime
 - TESTING.md and CV_WORKFLOW.md — verification guidance and limitations
 
@@ -79,9 +79,9 @@ No RunPod credentials are required for the current application. Never commit a r
 - Hosting: confirm the public deployment URL before adding it to Links.
 - Proof of use: complete and rename submission/SDC2026_TeamName_Replit_POU.pdf with real evidence before submission.
 
-## How We Use RunPod (Required in organiser template)
+## RunPod (Not applicable to this team)
 
-**Not implemented in this project.** The organiser template requires a RunPod section and proof of use. The file docs/organiser-template/runpod/handler.py is only the organiser sample and is neither deployed nor called by this app. Do not claim RunPod use or submit a completed proof of use without doing that work. Confirm organiser requirements if a RunPod component is mandatory for eligibility.
+The team says RunPod is not required for its submission. This application does not use RunPod. The original organiser template includes a RunPod section, example handler and proof form; they are kept only as unfilled reference materials, not as evidence of integration.
 
 ## Challenges & Learnings
 
@@ -90,7 +90,7 @@ To be completed by the team with its actual experience.
 ## Future Improvements
 
 - [ ] Add verified data sources if available; keep illustrative assumptions labelled.
-- [ ] Decide whether a genuine RunPod workload fits the project and the hackathon rules.
+- [ ] Consider new integrations only if they serve a real product need.
 
 ## Team
 
@@ -100,9 +100,9 @@ To be completed by the team with real names, roles and GitHub accounts.
 
 - [ ] Fill team name, domain, SDG track, team members and university.
 - [ ] Add verified live demo, slide deck and demo video links.
-- [ ] Complete and rename the four PDF templates under submission/ using the real team name.
+- [ ] Complete and rename the applicable PDF templates under submission/ using the real team name; the RunPod proof form is not applicable.
 - [ ] Provide genuine Replit proof of use.
-- [ ] Clarify and fulfil the organiser’s RunPod requirement; no integration or proof is present yet.
+- [ ] Check final submission instructions for any changes to the team’s stated RunPod exemption.
 - [ ] Complete preliminary submission and technology declaration truthfully.
 - [ ] Verify run steps on the actual deployed environment and confirm no secrets are committed.
 

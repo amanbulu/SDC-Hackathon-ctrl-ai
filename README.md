@@ -21,7 +21,7 @@ An interactive career-intelligence and reskilling dashboard for Malaysian studen
 | Live Demo         | https://skill-half-life-workforce-dashboard.replit.app/|
 | RunPod Endpoint   | not applicable      |
 | Slide Deck        | https://drive.google.com/file/d/1qfiSooVVCujrO2eu5U-XykhyN0xnEIVu/view?usp=sharing  |
-| Demo Video        | https://example.com/demo-video                 |
+| Demo Video        | https://youtu.be/ZWytbfstnlQ   |
 
 ---
 

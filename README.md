@@ -4,24 +4,26 @@ An interactive career-intelligence and reskilling dashboard for Malaysian studen
 
 ## Team Information
 
-| Field | Details |
-| --- | --- |
-| Team Name | ctrl + ai |
-| Team Domain | Domain 1 |
-| SDG Track | SDG 4 - Quality Education |
-| Team Leader | Ahmad Irfan Bin Ishak |
-| University | Universiti Teknologi Malaysia |
-| Number of Members | 5 |
+| Field                  | Details                                     |
+| ---------------------- | ------------------------------------------- |
+| **Team Name**          | ctrl + ai                                   |
+| **Team Domain**        | Domain 1                                    |
+| **SDG Track (1–17)**   | SDG 4 - Quality education                   |
+| **Team Leader**        | Ahmad Irfan bin Ishak                       |
+| **University**         | Universiti Teknologi Malaysia               |
+| **Number of Members**  | 5                                           |
 
 ## Links
 
-| Resource | Link |
-| --- | --- |
-| GitHub Repository | https://github.com/amanbulu/SDC-Hackathon-ctrl-ai- |
-| Live Demo | https://skill-half-life-workforce-dashboard.replit.app/ |
-| RunPod Endpoint | Not applicable to this team’s submission |
-| Slide Deck | https://drive.google.com/file/d/1qfiSooVVCujrO2eu5U-XykhyN0xnEIVu/view?usp=sharing |
-| Demo Video | To be added |
+| Resource          | Link                                           |
+| ----------------- | ---------------------------------------------- |
+| GitHub Repository | https://github.com/amanbulu/SDC-Hackathon-ctrl-ai-|
+| Live Demo         | https://skill-half-life-workforce-dashboard.replit.app/|
+| RunPod Endpoint   | https://api.runpod.ai/v2/your-endpoint-id      |
+| Slide Deck        | https://example.com/slides                     |
+| Demo Video        | https://example.com/demo-video                 |
+
+---
 
 ## Overview
 
@@ -92,17 +94,28 @@ To be completed by the team with its actual experience.
 
 ## Team
 
-To be completed by the team with real names, roles and GitHub accounts.
+| Name        | Role                | GitHub                                   |
+| ----------- | ------------------- | ---------------------------------------- |
+| Ahmad Irfan | Team Lead / Frontend | [@IpanTzy](https://github.com/IpanTzy) |
+| Adib Ashman | Backend / AI Engineer | [@amanbulu](https://github.com/amanbulu) |
+| Muhammad Firdaus | Content / SDG Specialist | [@muhammadfirdaus10](https://github.com/muhammadfirdaus10) |
+| Adam Iqbal Khan | Technical Writer / Pitcher | [@adamkhaniqbal](https://github.com/adamkhaniqbal) |
+| Adib Ashman | Backend / Data | [@naimnk174-star](https://github.com/naimnk174-star) |
+
+---
 
 ## Submission Checklist
 
-- [ ] Fill team name, domain, SDG track, team members and university.
-- [ ] Add verified live demo, slide deck and demo video links.
-- [ ] Complete and rename the applicable PDF templates under submission/ using the real team name; the RunPod proof form is not applicable.
-- [ ] Provide genuine Replit proof of use.
-- [ ] Check final submission instructions for any changes to the team’s stated RunPod exemption.
-- [ ] Complete preliminary submission and technology declaration truthfully.
-- [ ] Verify run steps on the actual deployed environment and confirm no secrets are committed.
+- [/] Team name, domain (Domain 1 / Domain 2) and SDG track filled in
+- [/] Slide deck link added
+- [/] Demo video link added
+- [/] Replit used, with proof of use in `submission/`
+- [ ] RunPod used, with proof of use in `submission/`
+- [/] Preliminary submission completed (`SDC2026_TeamName_Preliminary.pdf`)
+- [/] Technology declaration completed (`SDC2026_TeamName_TechDeclaration.pdf`)
+- [/] Submission files renamed with your team name (replace `TeamName`)
+- [/] "How to Run" steps verified
+- [/] No API keys or secrets committed to the repository
 
 ## License
 

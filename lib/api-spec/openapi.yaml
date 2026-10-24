@@ -1,0 +1,278 @@
+openapi: 3.1.0
+info:
+  # Do not change the title, if the title changes, the import paths will be broken
+  title: Api
+  version: 0.1.0
+  description: API specification
+servers:
+  - url: /api
+    description: Base API path
+tags:
+  - name: health
+    description: Health operations
+paths:
+  /skillhalflife/cv/analyze:
+    post:
+      operationId: analyzeCv
+      tags: [skillhalflife]
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: "#/components/schemas/CvUploadInput"
+      responses:
+        "200":
+          description: Locally extracted CV text and review candidates. Nothing is stored on the server.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CvAnalysis"
+        "400":
+          description: Unsupported, empty, corrupt, encrypted or unreadable document
+        "413":
+          description: File or document complexity exceeds processing limits
+        "429":
+          description: Too many upload requests; retry later
+  /skillhalflife/catalog:
+    get:
+      operationId: getSkillCatalog
+      responses:
+        "200":
+          description: Synthetic profile and illustrative model catalog
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ModelCatalog"
+  /skillhalflife/evaluate:
+    post:
+      operationId: evaluateProfile
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/EvaluationInput"
+      responses:
+        "200":
+          description: Deterministic career rankings and skill projections
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EvaluationResult"
+        "400":
+          description: Invalid model inputs
+  /healthz:
+    get:
+      operationId: healthCheck
+      tags: [health]
+      summary: Health check
+      description: Returns server health status
+      responses:
+        "200":
+          description: Healthy
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HealthStatus"
+components:
+  schemas:
+    CvUploadInput:
+      type: object
+      required: [file]
+      properties:
+        file:
+          type: string
+          format: binary
+    CvSkillCandidate:
+      type: object
+      required: [name, category, skillId, evidence, uncertain]
+      properties:
+        name: { type: string }
+        category: { type: string }
+        skillId: { type: [string, "null"] }
+        evidence: { type: string }
+        uncertain: { type: boolean }
+    CvSections:
+      type: object
+      required: [education, experience, projects, certifications, achievements]
+      properties:
+        education: { type: string, maxLength: 10000 }
+        experience: { type: string, maxLength: 10000 }
+        projects: { type: string, maxLength: 10000 }
+        certifications: { type: string, maxLength: 10000 }
+        achievements: { type: string, maxLength: 10000 }
+    CvAnalysis:
+      type: object
+      required: [text, candidates, sections, warnings]
+      properties:
+        text: { type: string }
+        candidates:
+          type: array
+          items: { $ref: "#/components/schemas/CvSkillCandidate" }
+        sections: { $ref: "#/components/schemas/CvSections" }
+        warnings:
+          type: array
+          items: { type: string }
+    MatchingProfile:
+      type: object
+      required: [skills, interests, educationLevel, relevantExperience]
+      properties:
+        skills:
+          type: object
+          additionalProperties: { type: number, minimum: 0, maximum: 100 }
+        interests:
+          type: array
+          maxItems: 7
+          items:
+            type: string
+            enum: [software, cloud, social-impact, infrastructure, security, data, ai]
+        educationLevel:
+          type: string
+          enum: [unconfirmed, secondary, diploma, bachelor, postgraduate]
+        relevantExperience: { type: boolean }
+    ModelCatalog:
+      type: object
+      required: [profile, skills, careers, goals, observations]
+      properties:
+        profile:
+          $ref: "#/components/schemas/StudentProfile"
+        skills:
+          type: array
+          items: { $ref: "#/components/schemas/SkillDefinition" }
+        careers:
+          type: array
+          items: { $ref: "#/components/schemas/CareerDefinition" }
+        goals:
+          type: array
+          items: { $ref: "#/components/schemas/GoalDefinition" }
+        observations:
+          type: array
+          items: { $ref: "#/components/schemas/MarketObservation" }
+    StudentProfile:
+      type: object
+      required: [name, location, education, experience, interests, skills]
+      properties:
+        name: { type: string }
+        location: { type: string }
+        education: { type: string }
+        experience: { type: string }
+        interests: { type: array, items: { type: string } }
+        skills: { type: object, additionalProperties: { type: number } }
+    SkillDefinition:
+      type: object
+      required: [id, name, nameMs, initialRelevance, moderateHalfLife, fastHalfLife, taskExposure, hours, prerequisites, project, projectMs]
+      properties:
+        id: { type: string }
+        name: { type: string }
+        nameMs: { type: string }
+        initialRelevance: { type: number }
+        moderateHalfLife: { type: number }
+        fastHalfLife: { type: number }
+        taskExposure: { type: number }
+        hours: { type: number }
+        prerequisites: { type: array, items: { type: string } }
+        project: { type: string }
+        projectMs: { type: string }
+    CareerDefinition:
+      type: object
+      required: [id, name, nameMs, interests, educationAlignment, requirements, sdgContributions]
+      properties:
+        id: { type: string }
+        name: { type: string }
+        nameMs: { type: string }
+        interests: { type: array, items: { type: string } }
+        educationAlignment: { type: number }
+        requirements: { type: object, additionalProperties: { type: number } }
+        sdgContributions: { type: object, additionalProperties: { type: number } }
+    GoalDefinition:
+      type: object
+      required: [id, name, nameMs, mechanism, mechanismMs]
+      properties:
+        id: { type: integer }
+        name: { type: string }
+        nameMs: { type: string }
+        mechanism: { type: string }
+        mechanismMs: { type: string }
+    MarketObservation:
+      type: object
+      required: [skillId, sourceUrl, observationDate, retrievalDate, metricDefinition, value, synthetic]
+      properties:
+        skillId: { type: string }
+        sourceUrl: { type: [string, "null"] }
+        observationDate: { type: [string, "null"] }
+        retrievalDate: { type: [string, "null"] }
+        metricDefinition: { type: string }
+        value: { type: number }
+        synthetic: { type: boolean }
+    EvaluationInput:
+      type: object
+      required: [scenario, years, simulatedSkills, sdgWeights]
+      properties:
+        profile:
+          $ref: "#/components/schemas/MatchingProfile"
+        scenario: { type: string, enum: [moderate, fast] }
+        years: { type: number, minimum: 0, maximum: 20 }
+        simulatedSkills:
+          type: object
+          additionalProperties: { type: number, minimum: 0, maximum: 100 }
+        sdgWeights:
+          type: object
+          additionalProperties: { type: number, minimum: 0, maximum: 100 }
+    EvaluationResult:
+      type: object
+      required: [rankings, projections, profileSkills, averageRelevance, roadmap]
+      properties:
+        rankings:
+          type: array
+          items: { $ref: "#/components/schemas/CareerMatch" }
+        projections:
+          type: array
+          items: { $ref: "#/components/schemas/SkillProjection" }
+        profileSkills: { type: object, additionalProperties: { type: number } }
+        averageRelevance: { type: number }
+        roadmap:
+          type: object
+          additionalProperties:
+            type: array
+            items: { type: string }
+    CareerMatch:
+      type: object
+      required: [careerId, fitScore, adjustedScore, sdgBonus, skillAlignment, interestAlignment, educationAlignment, missingSkills, transferableSkills, reasons, reasonsMs]
+      properties:
+        careerId: { type: string }
+        fitScore: { type: number }
+        adjustedScore: { type: number }
+        sdgBonus: { type: number }
+        skillAlignment: { type: number }
+        interestAlignment: { type: number }
+        educationAlignment: { type: number }
+        missingSkills: { type: array, items: { type: string } }
+        transferableSkills: { type: array, items: { type: string } }
+        reasons: { type: array, items: { type: string } }
+        reasonsMs: { type: array, items: { type: string } }
+    SkillProjection:
+      type: object
+      required: [skillId, halfLife, currentRelevance, futureRelevance, points]
+      properties:
+        skillId: { type: string }
+        halfLife: { type: number }
+        currentRelevance: { type: number }
+        futureRelevance: { type: number }
+        points:
+          type: array
+          items: { $ref: "#/components/schemas/RelevancePoint" }
+    RelevancePoint:
+      type: object
+      required: [year, relevance]
+      properties:
+        year: { type: number }
+        relevance: { type: number }
+    HealthStatus:
+      type: object
+      properties:
+        status:
+          type: string
+      required:
+        - status
+

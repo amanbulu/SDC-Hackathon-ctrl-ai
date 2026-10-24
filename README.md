@@ -22,7 +22,7 @@ An interactive career-intelligence and reskilling dashboard for Malaysian studen
 | GitHub Repository | https://github.com/amanbulu/SDC-Hackathon-ctrl-ai- |
 | Live Demo / Replit project | To be added after team verifies the URL |
 | RunPod Endpoint | Not applicable to this team’s submission |
-| Slide Deck | To be added |
+| Slide Deck | https://drive.google.com/file/d/1qfiSooVVCujrO2eu5U-XykhyN0xnEIVu/view?usp=sharing |
 | Demo Video | To be added |
 
 ## Overview

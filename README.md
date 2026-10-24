@@ -1,7 +1,5 @@
 # SkillHalfLife — SDC Hackathon Submission
 
-> Submission document templates are available in the [organiser’s Google Drive folder](https://drive.google.com/drive/folders/1xw7c2aN8N-at8hPEULzkcU76e_FFb0Ef). The PDF files under submission/ are unfilled copies from the organiser template, not completed submissions.
-
 An interactive career-intelligence and reskilling dashboard for Malaysian students. Demonstration data and model assumptions are synthetic/illustrative, not verified forecasts.
 
 ## Team Information

@@ -19,8 +19,8 @@ An interactive career-intelligence and reskilling dashboard for Malaysian studen
 | ----------------- | ---------------------------------------------- |
 | GitHub Repository | https://github.com/amanbulu/SDC-Hackathon-ctrl-ai-|
 | Live Demo         | https://skill-half-life-workforce-dashboard.replit.app/|
-| RunPod Endpoint   | https://api.runpod.ai/v2/your-endpoint-id      |
-| Slide Deck        | https://example.com/slides                     |
+| RunPod Endpoint   | not applicable      |
+| Slide Deck        | https://drive.google.com/file/d/1qfiSooVVCujrO2eu5U-XykhyN0xnEIVu/view?usp=sharing  |
 | Demo Video        | https://example.com/demo-video                 |
 
 ---

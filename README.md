@@ -9,11 +9,11 @@ An interactive career-intelligence and reskilling dashboard for Malaysian studen
 | Field | Details |
 | --- | --- |
 | Team Name | ctrl + ai |
-| Team Domain (Domain 1 / Domain 2) | To be confirmed |
-| SDG Track (1–17) | To be confirmed; the app lets users explore SDG preferences |
-| Team Leader | To be completed by the team |
-| University | To be completed by the team |
-| Number of Members | To be completed by the team |
+| Team Domain | Domain 1 |
+| SDG Track | SDG 4 - Quality Education |
+| Team Leader | Ahmad Irfan Bin Ishak |
+| University | Universiti Teknologi Malaysia |
+| Number of Members | 5 |
 
 ## Links
 

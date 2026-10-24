@@ -1,0 +1,28 @@
+kind = "web"
+previewPath = "/"
+title = "SkillHalfLife"
+description = "Career intelligence for Malaysian students: explore illustrative skill relevance, transparent career matches, SDG preferences and hypothetical reskilling pathways."
+version = "1.0.0"
+id = "artifacts/skillhalflife"
+router = "path"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 25589
+
+[services.development]
+run = "pnpm --filter @workspace/skillhalflife run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/skillhalflife", "run", "build" ]
+serve = "static"
+publicDir = "artifacts/skillhalflife/dist/public"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "25589"
+BASE_PATH = "/"

@@ -1,0 +1,30 @@
+uploads = []
+generated = []
+
+[[outputs]]
+id = "sMqeDRj-EEWAjaVhQX5Se"
+uri = "file://generated-artifacts/cv-tests/synthetic-cv.pdf"
+type = "pdf"
+title = "Synthetic CV — PDF"
+description = "Fake example CV for safely testing the upload and review workflow. Contains no real personal data."
+logical_id = "d5ca9609-aca1-4d8e-ab0a-b47146d12a24"
+content_hash = "sha256:9b6668d8ee1c5a26d59c5c0dffc0b7d66a23d64d866fecb2006fa4bb1df946cb"
+size = 1118
+mtime_ms = 1792753717919
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:712e6a01-ea33-486f-94fb-5f2c610b8dfd/d5ca9609-aca1-4d8e-ab0a-b47146d12a24/e2839221-0707-436e-ae95-ae8aa96e011e"
+storage_version_token = "1792754587061317"
+content_type = "application/pdf"
+
+[[outputs]]
+id = "CCOQQACoPBxQnbLJCZTfr"
+uri = "file://generated-artifacts/cv-tests/synthetic-cv.docx"
+type = "word_document"
+title = "Synthetic CV — Word"
+description = "The same synthetic example in DOCX format for testing Word document extraction."
+logical_id = "9195f652-2b48-44e9-b8d2-4fa93d857153"
+content_hash = "sha256:36eefd4be43f2203e27d9fd838e06ff22eaed055ebcecf711c2732a909b624d6"
+size = 2016
+mtime_ms = 1792753717919
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:712e6a01-ea33-486f-94fb-5f2c610b8dfd/9195f652-2b48-44e9-b8d2-4fa93d857153/cce65392-501d-4311-b4de-86bd64736178"
+storage_version_token = "1792754587476459"
+content_type = "application/vnd.openxmlformats-officedocument.wordprocessingml.document"

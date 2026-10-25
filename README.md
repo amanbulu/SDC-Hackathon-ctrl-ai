@@ -58,7 +58,7 @@ Key files and folders in this repository:
 ```text
 .
 ├── artifacts/
-│   ├── skillhalflife/                # React dashboard
+│   ├── skillhalflife/               # React dashboard
 │   │   ├── src/                     # Pages, components, hooks and state
 │   │   ├── public/                  # Static assets
 │   │   └── vite.config.ts           # Frontend build configuration

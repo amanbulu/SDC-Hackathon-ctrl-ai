@@ -54,13 +54,58 @@ SkillHalfLife explores hypothetical skill-relevance decay, career matching and r
 
 ## Project Structure
 
-- artifacts/skillhalflife — React app
-- artifacts/api-server — API and CV parsing
-- lib/skill-model — deterministic catalog, evaluations and unit tests
-- lib/api-spec and generated clients — API contract
-- submission/ — four unfilled organiser PDF templates; complete and rename only those applicable to the team’s submission. The RunPod proof form is included solely as an unfilled copy of the template.
-- docs/organiser-template/ — original Python/RunPod example and template README for reference only; not this app runtime
-- TESTING.md and CV_WORKFLOW.md — verification guidance and limitations
+Key files and folders in this repository:
+
+```text
+.
+├── artifacts/
+│   ├── skillhalflife/                # React dashboard
+│   │   ├── src/                     # Pages, components, hooks and state
+│   │   ├── public/                  # Static assets
+│   │   └── vite.config.ts           # Frontend build configuration
+│   ├── api-server/                  # Express API and CV processing
+│   │   ├── src/
+│   │   │   ├── routes/              # API endpoints
+│   │   │   └── lib/                 # CV parsing, analysis and tests
+│   │   └── build.mjs                # API build script
+│   └── mockup-sandbox/              # Component preview sandbox
+├── lib/
+│   ├── skill-model/
+│   │   └── src/
+│   │       ├── index.ts             # Skill catalog and evaluation model
+│   │       └── model.test.ts        # Model unit tests
+│   ├── api-spec/                    # OpenAPI contract and code generation
+│   ├── api-client-react/            # Generated React API client
+│   ├── api-zod/                     # Generated validation schemas
+│   └── db/                          # Unused PostgreSQL/Drizzle scaffold
+├── docs/
+│   └── organiser-template/          # Original organiser examples; reference only
+│       ├── runpod/handler.py        # Sample handler; not used by this app
+│       ├── src/                     # Sample Python entry point and helpers
+│       ├── tests/test_utils.py      # Tests for the sample Python helpers
+│       ├── .env.example             # Sample environment variables
+│       └── requirements.txt         # Sample Python dependencies
+├── submission/
+│   ├── SDC2026_ctrl + ai_Preliminary.pdf      # Preliminary submission
+│   ├── SDC2026_ctrl + ai_TechDeclaration.pdf  # Technology declaration
+│   └── SDC2026_ctrl+ai_Replit_POU.jpg         # Replit proof-of-use image
+├── scripts/                         # Utility and verification scripts
+├── .gitignore
+├── .replit                          # Existing Replit run configuration
+├── package.json                     # Workspace scripts and dependencies
+├── pnpm-workspace.yaml              # Workspace configuration
+├── pnpm-lock.yaml                   # Dependency lockfile
+├── tsconfig.json                    # TypeScript project configuration
+├── tsconfig.base.json               # Shared TypeScript compiler options
+├── TESTING.md                       # Manual checks and known limitations
+├── CV_WORKFLOW.md                   # CV workflow and verification guidance
+├── replit.md                        # Project context and operating notes
+├── LICENSE
+└── README.md
+```
+
+RunPod and the Python files under `docs/organiser-template/` are retained only as organiser reference examples. The application itself runs from the TypeScript workspaces under `artifacts/` and `lib/`.
+
 
 ## How to Run
 

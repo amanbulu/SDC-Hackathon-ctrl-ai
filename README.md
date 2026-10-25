@@ -97,9 +97,6 @@ Key files and folders in this repository:
 └── README.md
 ```
 
-RunPod and the Python files under `docs/organiser-template/` are retained only as organiser reference examples. The application itself runs from the TypeScript workspaces under `artifacts/` and `lib/`.
-
-
 ## How to Run
 
 This project uses Node.js 24 and pnpm workspaces, not the Python example in the organiser template. In the original Replit project, the dashboard and API have separate managed workflows. Keep the existing .replit configuration; do not replace it with the Python example.

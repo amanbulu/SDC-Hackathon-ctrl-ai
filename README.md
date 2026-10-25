@@ -78,12 +78,6 @@ Key files and folders in this repository:
 │   ├── api-zod/                     # Generated validation schemas
 │   └── db/                          # Unused PostgreSQL/Drizzle scaffold
 ├── docs/
-│   └── organiser-template/          # Original organiser examples; reference only
-│       ├── runpod/handler.py        # Sample handler; not used by this app
-│       ├── src/                     # Sample Python entry point and helpers
-│       ├── tests/test_utils.py      # Tests for the sample Python helpers
-│       ├── .env.example             # Sample environment variables
-│       └── requirements.txt         # Sample Python dependencies
 ├── submission/
 │   ├── SDC2026_ctrl + ai_Preliminary.pdf      # Preliminary submission
 │   ├── SDC2026_ctrl + ai_TechDeclaration.pdf  # Technology declaration

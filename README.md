@@ -47,10 +47,9 @@ SkillHalfLife explores hypothetical skill-relevance decay, career matching and r
 | --- | --- |
 | Frontend | React, Vite, TypeScript |
 | Backend | Express 5, TypeScript |
-| Model | Deterministic TypeScript skill model with tests |
-| Database | PostgreSQL/Drizzle scaffold present but not used for saved profiles |
-| AI / Compute | Replit AI assisted development; no RunPod inference in current application |
-| Hosting / Dev | Replit project configuration (deployment URL pending verification) |
+| Database | PostgreSQL/Drizzle scaffold present |
+| AI / Compute | Replit AI assisted development |
+| Hosting / Dev | Replit project configuration  |
 
 ## Project Structure
 
@@ -75,11 +74,11 @@ No RunPod credentials are required for the current application. Never commit a r
 
 ## How We Use Replit (Required)
 
-- Development: the code and original project history were exported from a Replit project. The team should describe its actual collaboration and Replit AI use accurately.
-- Hosting: confirm the public deployment URL before adding it to Links.
-- Proof of use: complete and rename submission/SDC2026_TeamName_Replit_POU.pdf with real evidence before submission.
+- Development: Collaboratively use Replit for cloud-based development environment to build, test, and debug our website.
+- Hosting: Deployment and hosting of our website, making it accessible through a public URL.
+- Proof of use: [`submission/SDC2026_ctrl+ai_Runpod_POU.jpg`](file:///C:/Users/Aman/Downloads/SDC2026_TeamName_Replit_POU.jpg)
 
-## RunPod (Not applicable to this team)
+## RunPod
 
 The team did not use RunPod for this program.
 

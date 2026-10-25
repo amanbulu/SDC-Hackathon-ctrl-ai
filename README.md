@@ -121,7 +121,7 @@ No RunPod credentials are required for the current application. Never commit a r
 
 - Development: Collaboratively use Replit for cloud-based development environment to build, test, and debug our website.
 - Hosting: Deployment and hosting of our website, making it accessible through a public URL.
-- Proof of use: [`submission/SDC2026_ctrl+ai_Runpod_POU.jpg`](file:///C:/Users/Aman/Downloads/SDC2026_TeamName_Replit_POU.jpg)
+- Proof of use: [`submission/SDC2026_ctrl+ai_Replit_POU.pdf`](https://github.com/amanbulu/SDC-Hackathon-ctrl-ai/blob/main/submission/SDC2026_ctrl%2Bai_Replit_POU.jpg)
 
 ## RunPod
 
